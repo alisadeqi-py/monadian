@@ -8,9 +8,20 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        vazir: ["var(--font-abar)", "Vazirmatn", "Tahoma", "sans-serif"],
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        brand: {
+          blue: "#0B63E5",
+          navy: "#2E3192",
+          navydark: "#061C3D",
+          yellow: "#FED213",
+          dark: "#1C1C1C",
+          card: "#26262C",
+        },
       },
     },
   },
