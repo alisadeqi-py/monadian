@@ -1,9 +1,61 @@
 import Image from "next/image";
 
 const ITEM_WIDTH = 160;
-const ITEM_COUNT = 20;
-const SET_WIDTH = ITEM_WIDTH * ITEM_COUNT;
-const RIBBON_ITEMS = Array.from({ length: ITEM_COUNT });
+
+// One "set" is repeated, then that whole set is duplicated exactly once —
+// the standard infinite-marquee technique — so translateX(-50%) always
+// lands on an identical frame.
+//
+// NOTE: this project has repeatedly hit a real, reproducible Chromium
+// rendering bug where a rotated + overflow:hidden + transform-animated
+// element goes intermittently blank once its own pixel width gets large
+// (empirically confirmed via stress testing at SET_COUNT 24/32/48 — all
+// blanked for a sustained span every cycle, regardless of whether the
+// content inside is a gradient, many clip-path divs, or a single tiled SVG
+// texture, ruling out "too many DOM nodes" as the cause). 20 is the largest
+// value verified with zero blanking across many rounds of testing — do not
+// raise this without re-running that stress test.
+const SET_COUNT = 20;
+const SET_WIDTH = ITEM_WIDTH * SET_COUNT;
+
+// Because the track content can't safely be made arbitrarily wide (see
+// above), the ribbon's own wrapper is capped at a fixed max width instead of
+// scaling forever with viewport — otherwise an ultra-wide screen (3440px,
+// 4K) would make the visible window wider than the track, producing a real,
+// permanent gap. Kept comfortably below SET_WIDTH for margin.
+const RIBBON_WRAPPER_MAX_WIDTH = 2800;
+const TRACK_SEGMENTS = Array.from({ length: SET_COUNT * 2 });
+
+// Diagonal cut: baked once into a tiny repeating SVG texture (one background
+// layer, tiled by the browser) instead of dozens of overlapping clip-path
+// divs — a single tiled image is far cheaper to composite than many
+// individually-transformed/clipped elements, which is what caused blank-frame
+// rendering glitches at wide track sizes. RIBBON_HEIGHT must match the
+// track's rendered height (h-full inside the h-14/56px wrapper).
+const RIBBON_HEIGHT = 56;
+const STRIPE_ANGLE_DEG = 65;
+const STRIPE_RUN = RIBBON_HEIGHT / Math.tan((STRIPE_ANGLE_DEG * Math.PI) / 180);
+const SEGMENT_RENDER_WIDTH = ITEM_WIDTH + STRIPE_RUN;
+const TILE_WIDTH = ITEM_WIDTH * 2;
+
+function buildStripeTileUrl(colors: [string, string]) {
+  const boxes = [0, 1]
+    .map((i) => {
+      const left = i * ITEM_WIDTH - STRIPE_RUN / 2;
+      const points = [
+        [left + STRIPE_RUN, 0],
+        [left + SEGMENT_RENDER_WIDTH, 0],
+        [left + SEGMENT_RENDER_WIDTH - STRIPE_RUN, RIBBON_HEIGHT],
+        [left, RIBBON_HEIGHT],
+      ]
+        .map(([x, y]) => `${x},${y}`)
+        .join(" ");
+      return `<polygon points="${points}" fill="${colors[i % 2]}"/>`;
+    })
+    .join("");
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${TILE_WIDTH}" height="${RIBBON_HEIGHT}" viewBox="0 0 ${TILE_WIDTH} ${RIBBON_HEIGHT}">${boxes}</svg>`;
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+}
 
 export default function Footer() {
   return (
@@ -104,22 +156,33 @@ function Ribbon({
 }) {
   return (
     <div
-      className="absolute inset-x-[-5%] h-14 overflow-hidden"
-      style={{ top, transform: `rotate(${rotate}deg)` }}
+      className="absolute h-14 overflow-hidden"
+      style={{
+        top,
+        left: "50%",
+        // Capped so the wrapper's own rendered width can never outgrow the
+        // (deliberately width-limited, see SET_COUNT above) track content —
+        // on very wide screens this holds the ribbon at a fixed max width
+        // instead of stretching edge-to-edge, which would otherwise leave a
+        // real structural gap where the track runs out of content.
+        width: `min(110%, ${RIBBON_WRAPPER_MAX_WIDTH}px)`,
+        transform: `translate(-50%, 0) rotate(${rotate}deg)`,
+      }}
     >
       <div
-        className="flex h-full animate-marquee items-center"
+        className="relative flex h-full animate-marquee items-center"
         style={{
           width: SET_WIDTH * 2,
-          background: `repeating-linear-gradient(65deg, ${colors[0]} 0px, ${colors[0]} 140px, ${colors[1]} 140px, ${colors[1]} 280px)`,
+          backgroundImage: buildStripeTileUrl(colors),
+          backgroundRepeat: "repeat-x",
+          backgroundSize: `${TILE_WIDTH}px 100%`,
           animationDirection: reverse ? "reverse" : "normal",
-          "--marquee-shift": `-${SET_WIDTH}px`,
-        } as React.CSSProperties}
+        }}
       >
-        {RIBBON_ITEMS.concat(RIBBON_ITEMS).map((_, i) => (
+        {TRACK_SEGMENTS.map((_, i) => (
           <span
             key={i}
-            className="flex flex-shrink-0 items-center justify-center text-xs font-bold text-white sm:text-sm"
+            className="relative z-10 flex flex-shrink-0 items-center justify-center text-xs font-bold text-white sm:text-sm"
             style={{ width: ITEM_WIDTH }}
           >
             منادیان فتح ایرانیان
