@@ -86,9 +86,9 @@ export default function Footer() {
         </form>
       </div>
 
-      <div className="relative mt-12 h-[110px] sm:h-[130px]">
+      <div className="relative mt-12 h-[150px] sm:h-[170px]">
         <Ribbon rotate={-3} top={0} colors={["#0B63E5", "#061C3D"]} />
-        <Ribbon rotate={3} top={55} colors={["#061C3D", "#0B63E5"]} reverse />
+        <Ribbon rotate={3} top={95} colors={["#061C3D", "#0B63E5"]} reverse />
 
         <button className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-brand-yellow px-10 py-4 text-sm font-extrabold text-[#12203f] shadow-lg transition hover:brightness-105 sm:text-base">
           ارسال درخواست

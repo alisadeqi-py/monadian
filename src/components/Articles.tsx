@@ -31,7 +31,7 @@ export default function Articles() {
 
       <div className="relative mx-auto w-full max-w-6xl px-6">
         <h2 className="mb-8 text-right text-lg font-bold text-white sm:text-xl">
-          مقالات<span className="font-medium text-slate-400">؛ پژوهش های آموزشی و اطلاعات کاربردی</span>
+          نمونه کار ها و فعالیت ها<span className="font-medium text-slate-400">؛ پژوهش های آموزشی و اطلاعات کاربردی</span>
         </h2>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">

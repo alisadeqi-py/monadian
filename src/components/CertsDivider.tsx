@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-const VIDEOS = ["/videos/bg-1.mp4", "/videos/bg-2.mp4"];
+const VIDEOS = ["/videos/bg-1.mp4", "/videos/bg-2.mp4", "/videos/bg-3.mp4"];
 
 export default function CertsDivider() {
   const [src] = useState(() => VIDEOS[Math.floor(Math.random() * VIDEOS.length)]);

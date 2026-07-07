@@ -1,9 +1,9 @@
 import Image from "next/image";
 
 const CARDS = [
-  { label: "حقیقی" },
-  { label: "حقوقی" },
-  { label: "حقوقی" },
+  { label: "تاییدیه شرکت خلاق از معاونت علمی و دانش بنیان ریاست جمهوری" },
+  { label: "مجوز موسسه فرهنگی هنری از وزارت فرهنگ و ارشاد اسلامی" },
+  { label: "مجوز پایگاه خبری از وزارت فرهنگ و ارشاد اسلامی" },
 ];
 
 const PARTNERS = [
@@ -26,19 +26,16 @@ export default function Licenses() {
           {CARDS.map((c, i) => (
             <div
               key={i}
-              className="group relative h-[180px] cursor-pointer overflow-hidden rounded-2xl bg-white shadow-[0_4px_24px_rgba(20,30,60,0.08)] ring-1 ring-black/5 transition-shadow duration-300 hover:shadow-lg hover:shadow-yellow-200 sm:h-[220px] lg:h-[260px]"
+              className="group relative flex items-center gap-5 overflow-hidden rounded-2xl bg-white p-6 shadow-[0_4px_24px_rgba(20,30,60,0.08)] ring-1 ring-black/5 transition-shadow duration-300 hover:shadow-lg hover:shadow-yellow-200 sm:p-8"
             >
-              <div
-                className="absolute inset-x-0 bottom-0 h-[55%] bg-[#CEE0FA] transition-colors duration-300 group-hover:bg-brand-yellow"
-                style={{
-                  clipPath: "polygon(100% 30%, 100% 100%, 0 100%, 0 75%)",
-                }}
-              />
-              <div className="absolute bottom-6 right-6 text-right">
+              <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl bg-[#CEE0FA] transition-colors duration-300 group-hover:bg-brand-yellow sm:h-20 sm:w-20">
+                <LicenseIcon />
+              </div>
+              <div className="text-right">
                 <p className="text-lg font-bold text-[#12203f] sm:text-xl">
                   {c.label}
                 </p>
-                <p className="mt-1 text-sm font-bold tracking-wide text-[#12203f] sm:text-base">
+                <p className="mt-1 text-sm font-bold tracking-wide text-gray-400 sm:text-base">
                   دستاوردهای مان
                 </p>
               </div>
@@ -94,10 +91,10 @@ export default function Licenses() {
 function Diamond({ src, featured }: { src: string; featured?: boolean }) {
   return (
     <div
-      className={`group flex flex-shrink-0 rotate-45 cursor-pointer items-center justify-center rounded-xl shadow-md transition-all duration-300 ease-out hover:scale-110 hover:bg-brand-yellow hover:shadow-lg hover:shadow-yellow-200 hover:ring-0 ${
+      className={`group flex flex-shrink-0 rotate-45 cursor-pointer items-center justify-center rounded-xl bg-white shadow-md ring-1 ring-black/5 transition-all duration-300 ease-out hover:scale-110 hover:bg-brand-yellow hover:shadow-lg hover:shadow-yellow-200 hover:ring-0 ${
         featured
-          ? "h-24 w-24 bg-brand-yellow shadow-lg shadow-yellow-200 sm:h-32 sm:w-32 lg:h-[145px] lg:w-[145px]"
-          : "h-16 w-16 bg-white ring-1 ring-black/5 sm:h-24 sm:w-24 lg:h-28 lg:w-28"
+          ? "h-24 w-24 sm:h-32 sm:w-32 lg:h-[145px] lg:w-[145px]"
+          : "h-16 w-16 sm:h-24 sm:w-24 lg:h-28 lg:w-28"
       }`}
     >
       <div
@@ -137,6 +134,26 @@ function NavDiamond({ direction }: { direction: "left" | "right" }) {
         </svg>
       </span>
     </button>
+  );
+}
+
+function LicenseIcon() {
+  return (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#12203f]">
+      <path
+        d="M12 3l2.4 1.9 3-.4.9 2.9 2.7 1.4-.9 2.9.9 2.9-2.7 1.4-.9 2.9-3-.4L12 21l-2.4-1.9-3 .4-.9-2.9-2.7-1.4.9-2.9-.9-2.9 2.7-1.4.9-2.9 3 .4L12 3z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M9 12.3l2 2 4-4.2"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
 
