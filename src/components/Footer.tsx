@@ -1,4 +1,8 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
+import { API_PUBLIC_URL } from "@/lib/api";
 
 const ITEM_WIDTH = 160;
 
@@ -58,6 +62,28 @@ function buildStripeTileUrl(colors: [string, string]) {
 }
 
 export default function Footer() {
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setStatus("loading");
+    try {
+      const res = await fetch(`${API_PUBLIC_URL}/api/contact/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone_number: phoneNumber, message }),
+      });
+      if (!res.ok) throw new Error("request failed");
+      setStatus("success");
+      setPhoneNumber("");
+      setMessage("");
+    } catch {
+      setStatus("error");
+    }
+  }
+
   return (
     <footer className="relative flex min-h-screen w-full flex-col justify-center overflow-hidden bg-brand-navy py-16">
       <div className="mx-auto w-full max-w-[1720px] px-6 sm:px-10 lg:px-16">
@@ -65,9 +91,16 @@ export default function Footer() {
           موسسه منادیان فتح ایرانیان
         </h2>
 
-        <form className="mx-auto mt-8 flex w-full max-w-2xl flex-col gap-4">
+        <form
+          id="contact-form"
+          onSubmit={handleSubmit}
+          className="mx-auto mt-8 flex w-full max-w-2xl flex-col gap-4"
+        >
           <input
             type="tel"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            required
             placeholder="شماره تماس"
             dir="rtl"
             className="w-full rounded-xl bg-[#F9F9F9] px-5 py-4 text-right text-sm font-bold text-[#12203f] placeholder:text-[#12203f] focus:outline-none focus:ring-2 focus:ring-brand-blue sm:text-base"
@@ -77,12 +110,24 @@ export default function Footer() {
               ثبت درخواست
             </p>
             <textarea
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
               placeholder="میتوانید متن کامل توضیح خود را در قسمت مشخص شده وارد کنید"
               dir="rtl"
               rows={2}
               className="mt-2 w-full resize-none bg-transparent text-right text-xs text-gray-400 placeholder:text-gray-400 focus:outline-none sm:text-sm"
           />
           </div>
+          {status === "success" && (
+            <p className="text-center text-sm font-bold text-green-400">
+              درخواست شما با موفقیت ثبت شد
+            </p>
+          )}
+          {status === "error" && (
+            <p className="text-center text-sm font-bold text-red-400">
+              خطا در ثبت درخواست، لطفاً دوباره تلاش کنید
+            </p>
+          )}
         </form>
       </div>
 
@@ -90,8 +135,13 @@ export default function Footer() {
         <Ribbon rotate={-3} top={0} colors={["#0B63E5", "#061C3D"]} />
         <Ribbon rotate={3} top={95} colors={["#061C3D", "#0B63E5"]} reverse />
 
-        <button className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-brand-yellow px-10 py-4 text-sm font-extrabold text-[#12203f] shadow-lg transition hover:brightness-105 sm:text-base">
-          ارسال درخواست
+        <button
+          type="submit"
+          form="contact-form"
+          disabled={status === "loading"}
+          className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-brand-yellow px-10 py-4 text-sm font-extrabold text-[#12203f] shadow-lg transition hover:brightness-105 disabled:opacity-60 sm:text-base"
+        >
+          {status === "loading" ? "در حال ارسال..." : "ارسال درخواست"}
         </button>
       </div>
 

@@ -14,9 +14,19 @@ const abar = localFont({
   display: "swap",
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://yourdomain.example";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "موسسه منادیان فتح ایرانیان",
   description: "موسسه منادیان فتح ایرانیان",
+  openGraph: {
+    title: "موسسه منادیان فتح ایرانیان",
+    description: "موسسه منادیان فتح ایرانیان",
+    url: siteUrl,
+    locale: "fa_IR",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

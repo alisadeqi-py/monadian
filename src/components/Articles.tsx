@@ -1,12 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
+import { getPortfolioItems } from "@/lib/api";
 
-const ARTICLES = [
-  { category: "دیجیتال مارکتینگ", title: "کاربردهای فعالیت..." },
-  { category: "فیلم برداری", title: "روش نگهداری ..." },
-  { category: "رسانه و خبر", title: "چطور محتوای وایرال بسازیم" },
-];
+export default async function Articles() {
+  const articles = await getPortfolioItems();
 
-export default function Articles() {
   return (
     <section className="relative flex min-h-screen w-full items-center overflow-hidden bg-brand-dark py-16">
       <div
@@ -34,19 +32,36 @@ export default function Articles() {
           نمونه کار ها و فعالیت ها<span className="font-medium text-slate-400">؛ پژوهش های آموزشی و اطلاعات کاربردی</span>
         </h2>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          {ARTICLES.map((a) => (
-            <div
-              key={a.category}
-              className="flex h-[260px] flex-col justify-end rounded-2xl bg-brand-card p-5 ring-1 ring-white/5 sm:h-[300px] md:h-[340px]"
-            >
-              <span className="text-xs text-gray-400">{a.category}</span>
-              <span className="mt-1 text-base font-bold text-white sm:text-lg">
-                {a.title}
-              </span>
-            </div>
-          ))}
-        </div>
+        {articles.length === 0 ? (
+          <p className="text-sm text-gray-400">
+            در حال حاضر نمونه کاری برای نمایش وجود ندارد.
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            {articles.map((a) => (
+              <Link
+                key={a.id}
+                href={`/portfolio/${a.id}`}
+                className="relative flex h-[260px] flex-col justify-end overflow-hidden rounded-2xl bg-brand-card ring-1 ring-white/5 transition hover:ring-white/20 sm:h-[300px] md:h-[340px]"
+              >
+                {a.image && (
+                  <div
+                    className="absolute inset-0"
+                    style={{ backgroundImage: `url(${a.image})`, backgroundSize: "cover", backgroundPosition: "center" }}
+                    aria-hidden="true"
+                  />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" aria-hidden="true" />
+                <div className="relative z-10 p-5">
+                  <span className="text-xs text-gray-300">{a.category}</span>
+                  <span className="mt-1 block text-base font-bold text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.6)] sm:text-lg">
+                    {a.title}
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
 
         <div className="mt-6 flex items-center justify-start gap-3">
           <button

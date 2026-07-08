@@ -1,0 +1,33 @@
+services:
+  backend:
+    build: ./backend
+    # Dev only: hot-reloading dev server instead of the Dockerfile's
+    # production gunicorn default.
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DJANGO_DEBUG=true
+      - DJANGO_ALLOWED_HOSTS=*
+
+  frontend:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      # Browser-facing (client components, e.g. the contact form) — must be
+      # reachable from the host machine, since it runs in the user's browser.
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      # Server-facing (server components fetching at render time) — runs
+      # inside this container, so it must use the Docker network hostname,
+      # not localhost.
+      - API_INTERNAL_URL=http://backend:8000
+    depends_on:
+      - backend
