@@ -61,10 +61,16 @@ function buildStripeTileUrl(colors: [string, string]) {
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 }
 
+const OFFICE_LOCATION = "35.718219199999986,51.42866925";
+
 export default function Footer() {
+  const [fullName, setFullName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -73,10 +79,11 @@ export default function Footer() {
       const res = await fetch(`${API_PUBLIC_URL}/api/contact/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone_number: phoneNumber, message }),
+        body: JSON.stringify({ full_name: fullName, phone_number: phoneNumber, message }),
       });
       if (!res.ok) throw new Error("request failed");
       setStatus("success");
+      setFullName("");
       setPhoneNumber("");
       setMessage("");
     } catch {
@@ -84,9 +91,43 @@ export default function Footer() {
     }
   }
 
+  async function handleNewsletterSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setNewsletterStatus("loading");
+    try {
+      const res = await fetch(`${API_PUBLIC_URL}/api/newsletter/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: newsletterEmail }),
+      });
+      if (!res.ok) throw new Error("request failed");
+      setNewsletterStatus("success");
+      setNewsletterEmail("");
+    } catch {
+      setNewsletterStatus("error");
+    }
+  }
+
   return (
     <footer className="relative flex min-h-screen w-full flex-col justify-center overflow-hidden bg-brand-navy py-16">
-      <div className="mx-auto w-full max-w-[1720px] px-6 sm:px-10 lg:px-16">
+      {/* The wave's cutout is transparent, so it must be clipped to a strip
+          backed by white (matching the section above) — left full-height,
+          its transparent top would just reveal the same navy behind it and
+          the wave would be invisible. */}
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-32 overflow-hidden bg-white sm:h-40 lg:h-48"
+        aria-hidden="true"
+      >
+        <Image
+          src="/assets/footer-wave-bg.png"
+          alt=""
+          width={1440}
+          height={806}
+          className="h-auto w-full"
+        />
+      </div>
+
+      <div className="relative mx-auto w-full max-w-[1720px] px-6 sm:px-10 lg:px-16">
         <h2 className="text-right text-2xl font-extrabold text-white sm:text-3xl">
           موسسه منادیان فتح ایرانیان
         </h2>
@@ -96,15 +137,25 @@ export default function Footer() {
           onSubmit={handleSubmit}
           className="mx-auto mt-8 flex w-full max-w-2xl flex-col gap-4"
         >
-          <input
-            type="tel"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-            required
-            placeholder="شماره تماس"
-            dir="rtl"
-            className="w-full rounded-xl bg-[#F9F9F9] px-5 py-4 text-right text-sm font-bold text-[#12203f] placeholder:text-[#12203f] focus:outline-none focus:ring-2 focus:ring-brand-blue sm:text-base"
-          />
+          <div className="flex flex-col gap-4 sm:flex-row">
+            <input
+              type="tel"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              required
+              placeholder="شماره تماس"
+              dir="rtl"
+              className="w-full rounded-xl bg-[#F9F9F9] px-5 py-4 text-right text-sm font-bold text-[#12203f] placeholder:text-[#12203f] focus:outline-none focus:ring-2 focus:ring-brand-blue sm:w-2/5 sm:text-base"
+            />
+            <input
+              type="text"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              placeholder="نام و نام خانوادگی"
+              dir="rtl"
+              className="w-full rounded-xl bg-[#F9F9F9] px-5 py-4 text-right text-sm font-bold text-[#12203f] placeholder:text-[#12203f] focus:outline-none focus:ring-2 focus:ring-brand-blue sm:w-3/5 sm:text-base"
+            />
+          </div>
           <div className="w-full rounded-xl bg-[#F9F9F9] px-5 py-4">
             <p className="text-right text-sm font-bold text-[#12203f] sm:text-base">
               ثبت درخواست
@@ -114,7 +165,7 @@ export default function Footer() {
               onChange={(e) => setMessage(e.target.value)}
               placeholder="میتوانید متن کامل توضیح خود را در قسمت مشخص شده وارد کنید"
               dir="rtl"
-              rows={2}
+              rows={4}
               className="mt-2 w-full resize-none bg-transparent text-right text-xs text-gray-400 placeholder:text-gray-400 focus:outline-none sm:text-sm"
           />
           </div>
@@ -139,53 +190,116 @@ export default function Footer() {
           type="submit"
           form="contact-form"
           disabled={status === "loading"}
-          className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-brand-yellow px-10 py-4 text-sm font-extrabold text-[#12203f] shadow-lg transition hover:brightness-105 disabled:opacity-60 sm:text-base"
+          className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-brand-yellow px-10 py-4 text-sm font-extrabold text-[#12203f] shadow-lg transition hover:brightness-105 disabled:opacity-60 sm:px-12 sm:py-4 sm:text-base"
         >
           {status === "loading" ? "در حال ارسال..." : "ارسال درخواست"}
         </button>
       </div>
 
-      <div className="mx-auto w-full max-w-[1720px] px-6 pb-10 pt-8 sm:px-10 lg:px-16">
-        <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
-          <div className="order-3 flex flex-col gap-4 sm:order-3">
-            <p className="text-sm font-medium text-white/90">
-              برای دریافت تخفیف های بیشتر ما را دنبال کنید!
-            </p>
-            <div className="flex items-center gap-3">
-              <SocialIcon label="اینستاگرام">
-                <InstagramIcon />
-              </SocialIcon>
-              <SocialIcon label="تلگرام">
-                <TelegramIcon />
-              </SocialIcon>
-              <SocialIcon label="واتساپ">
-                <WhatsappIcon />
-              </SocialIcon>
-              <SocialIcon label="یوتیوب">
-                <YoutubeIcon />
-              </SocialIcon>
-            </div>
-          </div>
+      <div className="relative mx-auto w-full max-w-[1720px] px-6 pb-8 pt-6 sm:px-10 lg:px-16">
+        <Image
+          src="/assets/footer-grid-pattern.png"
+          alt=""
+          width={389}
+          height={261}
+          aria-hidden="true"
+          className="pointer-events-none absolute -bottom-8 -left-4 hidden w-56 opacity-50 sm:block lg:w-72"
+        />
 
-          <div className="order-1 space-y-3 text-right sm:order-2">
-            <p className="text-sm text-white/90 sm:text-base">
-              <span className="font-bold text-white">آدرس</span>{" "}
-              تهران، ضلع شمال شرقی میدان هفت تیر، کوچه شهید فلامکی(آذری)
+        <div className="grid grid-cols-1 items-start gap-6 sm:grid-cols-3 sm:gap-8">
+          <div className="order-1 space-y-2.5 text-right">
+            <h3 className="mb-1 text-sm font-bold text-white sm:text-base">اطلاعات تماس</h3>
+            <p className="text-xs text-white/90 sm:text-sm">
+              <span className="ml-2 text-white/40">•</span>
+              <span className="text-white/70">پست الکترونیک</span>{" "}
+              <span dir="ltr">info@Monadian.ir</span>
             </p>
-            <p className="text-sm text-white/90 sm:text-base">
-              <span className="font-bold text-white">تلفن</span>{" "}
+            <p className="text-xs text-white/90 sm:text-sm">
+              <span className="ml-2 text-white/40">•</span>
+              <span className="text-white/70">ساعت کاری</span> شنبه تا چهارشنبه ۹ تا ۱۷
+            </p>
+            <p className="flex items-center justify-start gap-2 text-xs text-white/90 sm:text-sm">
+              <span className="text-white/70">تلفن دفتر:</span>
               <span dir="ltr">021-88821928</span>
+              <PhoneIcon />
             </p>
           </div>
 
-          <div className="order-2 flex items-center sm:order-1">
+          <div className="order-2 h-28 overflow-hidden rounded-2xl ring-1 ring-white/10 sm:h-32">
+            <iframe
+              title="موقعیت موسسه منادیان فتح ایرانیان"
+              src={`https://maps.google.com/maps?q=${OFFICE_LOCATION}&z=15&output=embed`}
+              className="h-full w-full border-0"
+              loading="lazy"
+            />
+          </div>
+
+          <div className="order-3 flex flex-col items-end gap-3">
             <Image
               src="/assets/badges-strip.png"
               alt="اتحادیه کشوری کسب و کارهای مجازی، نماد ساماندهی، نماد اعتماد الکترونیکی"
               width={251}
               height={80}
-              className="h-12 w-auto object-contain sm:h-16"
+              className="h-14 w-auto object-contain sm:h-16"
             />
+          </div>
+        </div>
+
+        <div className="mt-6 grid grid-cols-1 items-start gap-6 sm:grid-cols-3 sm:gap-8">
+          <div className="order-1 hidden sm:block" aria-hidden="true" />
+
+          <p className="order-2 flex items-center justify-center gap-2 text-center text-xs text-white/90 sm:text-sm">
+            <span>تهران، ضلع شمال شرقی میدان هفت تیر، کوچه شهید فلامکی(آذری)</span>
+            <LocationIcon />
+          </p>
+
+          <div className="order-3 flex flex-col gap-1.5">
+            <h3 className="text-xs font-bold text-white sm:text-sm">خبرنامه ما</h3>
+            <form onSubmit={handleNewsletterSubmit} className="flex items-center gap-2">
+              <input
+                type="email"
+                value={newsletterEmail}
+                onChange={(e) => setNewsletterEmail(e.target.value)}
+                required
+                placeholder="ایمیل خود را وارد کنید..."
+                dir="rtl"
+                className="min-w-0 flex-1 rounded-xl bg-white/10 px-4 py-2.5 text-right text-xs text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
+              />
+              <button
+                type="submit"
+                disabled={newsletterStatus === "loading"}
+                aria-label="ارسال"
+                className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-brand-yellow text-[#12203f] transition hover:brightness-105 disabled:opacity-60"
+              >
+                <SendIcon />
+              </button>
+            </form>
+            {newsletterStatus === "success" && (
+              <p className="text-xs font-bold text-green-400">با موفقیت ثبت شد</p>
+            )}
+            {newsletterStatus === "error" && (
+              <p className="text-xs font-bold text-red-400">خطا در ثبت، دوباره تلاش کنید</p>
+            )}
+          </div>
+        </div>
+
+        <div className="mt-8 flex flex-col-reverse items-center justify-between gap-4 border-t border-white/10 pt-6 sm:flex-row">
+          <p className="text-center text-xs text-white/70 sm:text-right">
+            تمامی حقوق مادی و معنوی این وبسایت برای موسسه منادیان فتح ایرانیان محفوظ می‌باشد.
+          </p>
+          <div className="flex items-center gap-3">
+            <SocialIcon label="اینستاگرام">
+              <InstagramIcon />
+            </SocialIcon>
+            <SocialIcon label="تلگرام">
+              <TelegramIcon />
+            </SocialIcon>
+            <SocialIcon label="واتساپ">
+              <WhatsappIcon />
+            </SocialIcon>
+            <SocialIcon label="یوتیوب">
+              <YoutubeIcon />
+            </SocialIcon>
           </div>
         </div>
       </div>
@@ -240,6 +354,41 @@ function Ribbon({
         ))}
       </div>
     </div>
+  );
+}
+
+function PhoneIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0 text-white/80">
+      <path
+        d="M4.5 4.5h3.2l1.3 4-2 1.5a11 11 0 0 0 5 5l1.5-2 4 1.3v3.2c0 1-.9 1.7-1.8 1.4-3.6-1-6.8-3-9.2-5.9-1.6-2-2.7-4.4-3-6.9-.1-1 .5-1.6 1-1.6z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function LocationIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mt-0.5 flex-shrink-0 text-white/80">
+      <path
+        d="M12 21s-6.5-5.6-6.5-11A6.5 6.5 0 0 1 18.5 10c0 5.4-6.5 11-6.5 11z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <circle cx="12" cy="10" r="2.2" stroke="currentColor" strokeWidth="1.5" />
+    </svg>
+  );
+}
+
+function SendIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: "scaleX(-1)" }}>
+      <path d="M20 4L3 11l6 2.5M20 4l-4 16-7-6.5M20 4L9 13.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 

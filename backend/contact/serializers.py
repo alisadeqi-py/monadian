@@ -6,5 +6,5 @@ from .models import ContactSubmission
 class ContactSubmissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactSubmission
-        fields = ["id", "phone_number", "message", "created_at"]
+        fields = ["id", "full_name", "phone_number", "message", "created_at"]
         read_only_fields = ["id", "created_at"]

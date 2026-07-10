@@ -29,6 +29,7 @@ urlpatterns = [
     path("api/contact/", include("contact.urls")),
     path("api/holdings/", include("holdings.urls")),
     path("api/portfolio/", include("portfolio.urls")),
+    path("api/newsletter/", include("newsletter.urls")),
 ]
 
 if settings.DEBUG:

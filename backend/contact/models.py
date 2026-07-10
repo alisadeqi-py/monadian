@@ -2,6 +2,7 @@ from django.db import models
 
 
 class ContactSubmission(models.Model):
+    full_name = models.CharField("نام و نام خانوادگی", max_length=150, blank=True)
     phone_number = models.CharField("شماره تماس", max_length=20)
     message = models.TextField("متن درخواست", blank=True)
     is_reviewed = models.BooleanField("بررسی شده", default=False)

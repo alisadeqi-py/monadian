@@ -14,7 +14,9 @@ services:
       - DJANGO_ALLOWED_HOSTS=*
 
   frontend:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     ports:
       - "3000:3000"
     volumes:

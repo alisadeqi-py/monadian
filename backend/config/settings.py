@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "contact",
     "holdings",
     "portfolio",
+    "newsletter",
 ]
 
 MIDDLEWARE = [
@@ -144,7 +145,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 50,
     # Scope used by the public contact-form endpoint to prevent spam/abuse.
-    "DEFAULT_THROTTLE_RATES": {"contact": "5/hour"},
+    "DEFAULT_THROTTLE_RATES": {"contact": "5/hour", "newsletter": "10/hour"},
 }
 
 # Production hardening. TLS is terminated at the nginx reverse proxy in front
