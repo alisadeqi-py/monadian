@@ -63,7 +63,7 @@ export default function Licenses() {
                     <CornerIcon width={20} height={20} />
                     {c.ministry}
                   </span>
-                  <span className="w-auto h-auto">
+                  {/* <span className="w-auto h-auto">
                     <Image
                       src="/assets/logo-mark.png"
                       alt=""
@@ -71,7 +71,7 @@ export default function Licenses() {
                       height={5}
                       className="h-auto w-auto flex object-cover flex-1"
                     />
-                  </span>
+                  </span> */}
                 </span>
               </div>
             </div>
