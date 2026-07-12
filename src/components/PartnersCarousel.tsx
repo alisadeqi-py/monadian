@@ -4,11 +4,11 @@ import { useRef, useEffect, useState, useLayoutEffect } from "react";
 import Image from "next/image";
 
 const PARTNERS = [
-  { src: "/assets/khanevade.svg" },
-  { src: "/assets/rah.svg" },
-  { src: "/assets/tehran.svg", },
-  { src: "/assets/farhang.svg" },
-  { src: "/assets/miras.svg" },
+  { src: "/assets/khanevade.svg", title: "بنیاد ملی خانواده" },
+  { src: "/assets/rah.svg", title: "وزارت راه و شهرسازی" },
+  { src: "/assets/tehran.svg", title: "شهرداری تهران" },
+  { src: "/assets/farhang.svg", title: "وزارت فرهنگ و ارشاد اسلامی" },
+  { src: "/assets/miras.svg", title: " وزارت میراث و گردشگری" },
 ];
 
 export default function PartnersCarousel() {
@@ -83,7 +83,7 @@ export default function PartnersCarousel() {
           aria-hidden="true"
         >
           {PARTNERS.map((p, i) => (
-            <Diamond key={i} src={p.src} />
+            <Diamond key={i} src={p.src} title={p.title} />
           ))}
         </div>
 
@@ -94,7 +94,7 @@ export default function PartnersCarousel() {
           style={{ width: "max-content", willChange: "transform" }}
         >
           {infinitePartners.map((p, i) => (
-            <Diamond key={i} src={p.src} />
+            <Diamond key={i} src={p.src} title={p.title} />
           ))}
         </div>
       </div>
@@ -103,10 +103,10 @@ export default function PartnersCarousel() {
 }
 
 // Diamond and NavDiamond components remain exactly as you had them
-function Diamond({ src }: { src: string; featured?: boolean }) {
+function Diamond({ src, title }: { src: string; title?: string }) {
 
   return (
-    <div className="group relative flex h-36 w-36 flex-shrink-0 cursor-pointer items-center justify-center transition-transform duration-300 ease-out hover:scale-110 sm:h-44 sm:w-44 lg:h-[200px] lg:w-[200px]">
+    <div className="relative flex flex-col h-36 w-36 flex-shrink-0 cursor-pointer items-center justify-center transition-transform duration-300 ease-out hover:scale-110 sm:h-44 sm:w-44 lg:h-[200px] lg:w-[200px]">
       <div className="relative z-10 flex h-[90px] w-[90px] items-center justify-center p-1 sm:h-[110px] sm:w-[110px] lg:h-[138px] lg:w-[138px]">
         <Image
           src={src}
@@ -117,6 +117,7 @@ function Diamond({ src }: { src: string; featured?: boolean }) {
           className="h-full w-full object-contain"
         />
       </div>
+      <p className="flex-1 bg-white rounded-xl text-center p-2 flex items-center">{title}</p>
     </div>
   );
 }
