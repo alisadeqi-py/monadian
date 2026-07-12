@@ -37,13 +37,13 @@ export default function Licenses() {
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3 lg:gap-16">
           {CARDS.map((c, i) => (
-            <div key={i} className="group flex w-full flex-col items-center gap-4 text-center">
+            <div key={i} className="flex w-full flex-col items-center gap-4 text-center">
               <Image
                 src={c.icon}
                 alt=""
                 width={112}
                 height={112}
-                className="mx-auto h-[90px] w-auto object-contain transition-transform duration-300 group-hover:scale-105 sm:h-[108px]"
+                className="w-max h-max ml-auto"
               />
               <div className="flex self-start">
                 <p className="font-bold text-[#12203f] sm:text-lg">{c.title}</p>
