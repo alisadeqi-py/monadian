@@ -3,20 +3,18 @@ import PartnersCarousel from "./PartnersCarousel";
 
 const CARDS = [
   {
-    title: "",
-
-    
-    ministry: " مجوز موسسه فرهنگی هنری از وزارت فرهنگ و ارشاد اسلامی",
+    title: " مجوز موسسه فرهنگی هنری",
+    ministry: " از وزارت فرهنگ و ارشاد اسلامی",
     icon: "/assets/license-badge-1.png",
   },
   {
-    title: "",
-    ministry: "  تاییدیه شرکت خلاق از معاونت علمی و دانش بنیان ریاست جمهوری",
+    title: "تاییدیه شرکت خلاق",
+    ministry: "  از معاونت علمی و دانش بنیان ریاست جمهوری",
     icon: "/assets/license-gov-seal.png",
   },
   {
-    title: "",
-    ministry: "مجوز پایگاه خبری از وزارت فرهنگ و ارشاد اسلامی",
+    title: "مجوز پایگاه خبری ",
+    ministry: " از وزارت فرهنگ و ارشاد اسلامی",
     icon: "/assets/license-badge-2.png",
   },
 ];
@@ -34,7 +32,7 @@ export default function Licenses() {
 
       <div className="relative mx-auto w-full max-w-[1720px] px-6 sm:px-10 lg:px-16">
         <h2 className="mb-5 text-right text-xl font-bold text-[#12203f] sm:text-2xl">
-          مجوزها<span className="font-medium text-gray-400"></span>
+          مجوزها، <span className="font-medium text-gray-400">دسترسی های فعال و لایسنس ها</span>
         </h2>
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3 lg:gap-16">
@@ -47,7 +45,9 @@ export default function Licenses() {
                 height={112}
                 className="mx-auto h-[90px] w-auto object-contain transition-transform duration-300 group-hover:scale-105 sm:h-[108px]"
               />
-              <p className="text-base font-bold text-[#12203f] sm:text-lg">{c.title}</p>
+              <div className="flex self-start">
+                <p className="font-bold text-[#12203f] sm:text-lg">{c.title}</p>
+              </div>
               <div className="relative isolate flex w-full items-center gap-2 rounded-full px-7 py-3.5">
                 <span
                   aria-hidden="true"
@@ -57,17 +57,21 @@ export default function Licenses() {
                   aria-hidden="true"
                   className="pointer-events-none absolute inset-0 -z-10 rounded-full bg-[url('/assets/license-pill-hover.png')] bg-[length:100%_100%] bg-no-repeat opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                 />
-                <span className="flex items-center gap-2 text-sm font-semibold text-[#12203f]/60 transition-colors duration-300 group-hover:text-[#12203f] sm:text-base md:whitespace-nowrap">
-                  <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-white ring-1 ring-[#12203f]/10">
+
+                <span className="flex w-full justify-between items-center gap-2 text-sm font-semibold text-[#12203f]/60 transition-colors duration-300 group-hover:text-[#12203f] sm:text-base md:whitespace-nowrap">
+                  <span className="flex">
+                    <CornerIcon width={20} height={20} />
+                    {c.ministry}
+                  </span>
+                  <span className="w-auto h-auto">
                     <Image
                       src="/assets/logo-mark.png"
                       alt=""
-                      width={1986}
-                      height={1775}
-                      className="h-full w-full scale-125 object-cover"
+                      width={5}
+                      height={5}
+                      className="h-auto w-auto flex object-cover flex-1"
                     />
                   </span>
-                  {c.ministry}
                 </span>
               </div>
             </div>
@@ -101,11 +105,11 @@ export default function Licenses() {
           />
 
           <h3 className="relative mb-7 mt-20 text-right text-lg font-bold text-[#12203f] sm:text-xl">
-            <span className="flex items-center justify-start gap-2">
-              <CornerIcon />
-              برندهایی که افتخار همکاری داشتیم
+            <span className="flex items-center gap-2">
+              <CornerIcon width={24} height={24} />
+              برندهایی که افتخار همکاری داشتیم ؛
+              <span className="block font-medium text-gray-400 sm:mt-0 sm:inline">  گنجینه ای از تجربه های موفق </span>
             </span>
-            <span className="mt-1 block font-medium text-gray-400 sm:mt-0 sm:inline"> ؛ گنجینه ای از تجربه های موفق</span>
           </h3>
 
           <PartnersCarousel />
@@ -115,9 +119,9 @@ export default function Licenses() {
   );
 }
 
-function CornerIcon() {
+function CornerIcon({ width = 16, height = 16 }) {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#12203f]">
+    <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#12203f]">
       <path
         d="M19 5v6a4 4 0 0 1-4 4H6M6 15l4-4M6 15l4 4"
         stroke="currentColor"
