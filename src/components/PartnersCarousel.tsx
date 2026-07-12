@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect, useState, useLayoutEffect } from "react";
 import Image from "next/image";
 
 const PARTNERS = [
@@ -13,30 +13,115 @@ const PARTNERS = [
 
 export default function PartnersCarousel() {
   const trackRef = useRef<HTMLDivElement>(null);
+  const singleSetRef = useRef<HTMLDivElement>(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const [infinitePartners, setInfinitePartners] = useState(() => {
+    // Initial fallback – will be recalculated on mount
+    return [...PARTNERS, ...PARTNERS, ...PARTNERS];
+  });
+  const [singleSetWidth, setSingleSetWidth] = useState(0);
 
+  // Measure a single set width and calculate required copies
+  useLayoutEffect(() => {
+    const measure = () => {
+      if (!singleSetRef.current) return;
+      const setWidth = singleSetRef.current.scrollWidth;
+      if (setWidth === 0) return;
+      const viewportWidth = window.innerWidth;
+      // We need at least 2 sets to fill the viewport, plus 1 extra for smooth looping
+      const copiesNeeded = Math.ceil((viewportWidth * 2) / setWidth) + 1;
+      // Ensure at least 3 copies
+      const copies = Math.max(copiesNeeded, 3);
+      setSingleSetWidth(setWidth);
+      setInfinitePartners(Array(copies).fill(PARTNERS).flat());
+    };
+
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+
+  // Infinite animation
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track || singleSetWidth === 0) return;
+
+    let animationId: number;
+    let position = 0;
+    const speed = 0.3; // pixels per frame
+
+    const animate = () => {
+      if (!isPaused) {
+        position += speed;
+        if (position >= singleSetWidth) {
+          position -= singleSetWidth;
+        }
+        track.style.transform = `translateX(${position}px)`;
+      }
+      animationId = requestAnimationFrame(animate);
+    };
+
+    animationId = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(animationId);
+  }, [isPaused, singleSetWidth]);
+
+  const handleMouseEnter = () => setIsPaused(true);
+  const handleMouseLeave = () => setIsPaused(false);
+
+  // Manual scroll (pauses, shifts, resumes)
   const scroll = (dir: 1 | -1) => {
     const track = trackRef.current;
-    if (!track) return;
+    if (!track || singleSetWidth === 0) return;
+
+    setIsPaused(true);
     const amount = track.clientWidth * 0.6 * dir;
-    track.scrollBy({ left: -amount, behavior: "smooth" });
+    const currentTransform = track.style.transform;
+    const match = currentTransform.match(/translateX\(-([\d.]+)px\)/);
+    const currentPos = match ? parseFloat(match[1]) : 0;
+    let newPos = currentPos + amount;
+    if (newPos >= singleSetWidth) newPos -= singleSetWidth;
+    if (newPos < 0) newPos += singleSetWidth;
+    track.style.transform = `translateX(-${newPos}px)`;
+    setTimeout(() => setIsPaused(false), 300);
   };
 
   return (
     <div className="flex items-center gap-3">
       <NavDiamond direction="right" onClick={() => scroll(-1)} />
       <div
-        ref={trackRef}
-        className="scrollbar-hide flex flex-1 items-center gap-6 overflow-x-auto scroll-smooth px-1 py-2 sm:gap-8 lg:justify-center lg:gap-16 lg:overflow-visible"
+        className="relative flex-1 overflow-hidden px-1 py-2"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
-        {PARTNERS.map((p, i) => (
-          <Diamond key={i} src={p.src} featured={p.featured} />
-        ))}
+        {/* Hidden measurement row – only one set */}
+        <div
+          ref={singleSetRef}
+          className="invisible absolute flex items-center gap-6 sm:gap-8 lg:gap-16"
+          aria-hidden="true"
+        >
+          {PARTNERS.map((p, i) => (
+            <Diamond key={i} src={p.src} featured={p.featured} />
+          ))}
+        </div>
+
+        {/* Animated track with dynamically duplicated partners */}
+        <div
+          ref={trackRef}
+          className="flex items-center gap-6 sm:gap-8 lg:gap-16"
+          style={{ width: "max-content", willChange: "transform" }}
+        >
+          {infinitePartners.map((p, i) => (
+            <Diamond key={i} src={p.src} featured={p.featured} />
+          ))}
+        </div>
       </div>
       <NavDiamond direction="left" onClick={() => scroll(1)} />
     </div>
   );
 }
 
+// Diamond and NavDiamond components remain exactly as you had them
 function Diamond({ src, featured }: { src: string; featured?: boolean }) {
   if (featured) {
     return (
