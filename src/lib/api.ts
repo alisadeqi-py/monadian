@@ -13,12 +13,20 @@ export type HoldingCompany = {
   name: string;
   logo: string | null;
   description: string;
+  url: string;
   order: number;
 };
 
 export type PortfolioImage = {
   id: number;
   image: string;
+  caption: string;
+  order: number;
+};
+
+export type PortfolioService = {
+  id: number;
+  title: string;
   order: number;
 };
 
@@ -29,7 +37,11 @@ export type PortfolioItem = {
   image: string | null;
   description: string;
   video: string | null;
+  aparat_src: string;
   images: PortfolioImage[];
+  services: PortfolioService[];
+  date: string;
+  client: string;
   link: string;
   order: number;
 };
@@ -48,10 +60,14 @@ export async function getHoldingCompanies(): Promise<HoldingCompany[]> {
     const res = await fetch(`${API_INTERNAL_URL}/api/holdings/`, {
       cache: "no-store",
     });
-    if (!res.ok) return [];
+    if (!res.ok) {
+      console.error(`getHoldingCompanies: ${API_INTERNAL_URL}/api/holdings/ responded ${res.status}`);
+      return [];
+    }
     const data: HoldingCompany[] = await res.json();
     return data.map((h) => ({ ...h, logo: toPublicUrl(h.logo) }));
-  } catch {
+  } catch (err) {
+    console.error(`getHoldingCompanies: fetch to ${API_INTERNAL_URL}/api/holdings/ threw`, err);
     return [];
   }
 }
@@ -73,10 +89,14 @@ export async function getPortfolioItems(): Promise<PortfolioItem[]> {
     const res = await fetch(`${API_INTERNAL_URL}/api/portfolio/`, {
       cache: "no-store",
     });
-    if (!res.ok) return [];
+    if (!res.ok) {
+      console.error(`getPortfolioItems: ${API_INTERNAL_URL}/api/portfolio/ responded ${res.status}`);
+      return [];
+    }
     const data: PortfolioItem[] = await res.json();
     return data.map(normalizePortfolioItem);
-  } catch {
+  } catch (err) {
+    console.error(`getPortfolioItems: fetch to ${API_INTERNAL_URL}/api/portfolio/ threw`, err);
     return [];
   }
 }
@@ -86,10 +106,14 @@ export async function getPortfolioItem(id: number): Promise<PortfolioItem | null
     const res = await fetch(`${API_INTERNAL_URL}/api/portfolio/${id}/`, {
       cache: "no-store",
     });
-    if (!res.ok) return null;
+    if (!res.ok) {
+      console.error(`getPortfolioItem: ${API_INTERNAL_URL}/api/portfolio/${id}/ responded ${res.status}`);
+      return null;
+    }
     const data: PortfolioItem = await res.json();
     return normalizePortfolioItem(data);
-  } catch {
+  } catch (err) {
+    console.error(`getPortfolioItem: fetch to ${API_INTERNAL_URL}/api/portfolio/${id}/ threw`, err);
     return null;
   }
 }

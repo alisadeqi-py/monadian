@@ -5,6 +5,7 @@ class HoldingCompany(models.Model):
     name = models.CharField("نام شرکت", max_length=200)
     logo = models.ImageField("لوگو", upload_to="holdings/", blank=True, null=True)
     description = models.TextField("توضیحات", blank=True)
+    url = models.URLField("آدرس وبسایت", blank=True)
     order = models.PositiveIntegerField("ترتیب نمایش", default=0)
     is_active = models.BooleanField("فعال", default=True)
 

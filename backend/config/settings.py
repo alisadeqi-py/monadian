@@ -20,6 +20,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env()
 environ.Env.read_env(BASE_DIR / ".env")
 
+# Everything that must survive a redeploy (the SQLite DB + uploaded media)
+# lives under here. Runflare rebuilds this container's filesystem from
+# scratch on every deploy, so a persistent disk MUST be mounted at this
+# exact path — see DATA_DIR below — or uploads/data vanish every time.
+# Defaults to a plain subdirectory for local dev, where persistence across
+# rebuilds isn't a concern.
+DATA_DIR = Path(env("DATA_DIR", default=str(BASE_DIR / "data")))
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+
 # SECURITY WARNING: keep the secret key used in production secret!
 # The fallback below is only ever used for local/dev convenience — real
 # deployments must set DJANGO_SECRET_KEY in the environment.
@@ -32,7 +41,15 @@ SECRET_KEY = env(
 # via env, rather than opt out of it.
 DEBUG = env.bool("DJANGO_DEBUG", default=False)
 
-ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
+# The Runflare domain is baked in as a fallback (not just read from
+# backend/.env) because that file is gitignored and has, at least once,
+# failed to make it into a Runflare deploy — this way the site still works
+# even if a future deploy silently drops it. DJANGO_ALLOWED_HOSTS in the
+# environment/`.env` still overrides this when present.
+ALLOWED_HOSTS = env.list(
+    "DJANGO_ALLOWED_HOSTS",
+    default=["localhost", "127.0.0.1", "monadian3.runflare.run"],
+)
 
 
 # Application definition
@@ -54,6 +71,10 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    # Serves STATIC_ROOT directly from the app process — needed because this
+    # deploys as a single container behind Runflare with no nginx in front,
+    # so nothing else is serving /static/.
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -63,12 +84,22 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# The Next.js origin(s) allowed to call this API.
+# The Next.js origin(s) allowed to call this API. Same reasoning as
+# ALLOWED_HOSTS above — the Runflare frontend origin is baked in as a
+# fallback in case backend/.env doesn't make it into a deploy.
 CORS_ALLOWED_ORIGINS = env.list(
-    "CORS_ALLOWED_ORIGINS", default=["http://localhost:3000", "http://127.0.0.1:3000"]
+    "CORS_ALLOWED_ORIGINS",
+    default=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://monadian2.runflare.run",
+    ],
 )
 
-CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
+CSRF_TRUSTED_ORIGINS = env.list(
+    "CSRF_TRUSTED_ORIGINS",
+    default=["https://monadian2.runflare.run", "https://monadian3.runflare.run"],
+)
 
 ROOT_URLCONF = "config.urls"
 
@@ -93,8 +124,15 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+# The Runflare Postgres URL is baked in as a fallback (same reasoning as
+# ALLOWED_HOSTS/CORS/CSRF above) — DATABASE_URL in the environment still
+# overrides this when present. Local dev pins DATABASE_URL to sqlite in
+# docker-compose.yml, so this default never applies there.
 DATABASES = {
-    "default": env.db("DATABASE_URL", default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
+    "default": env.db(
+        "DATABASE_URL",
+        default="postgresql://postgres:dC6Qa5AfUnDnJzwKrw4h@monadiandb-csm-service:5432/monadianznb_db",
+    )
 }
 
 
@@ -134,10 +172,18 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Uploaded images (holding company logos, portfolio images, etc).
 MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = DATA_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -148,11 +194,15 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {"contact": "5/hour", "newsletter": "10/hour"},
 }
 
-# Production hardening. TLS is terminated at the nginx reverse proxy in front
-# of gunicorn, so SECURE_PROXY_SSL_HEADER tells Django to trust the
-# X-Forwarded-Proto header nginx sets when deciding if a request is secure.
+# Production hardening. TLS is terminated at the platform's edge proxy, not
+# by gunicorn itself, so SECURE_PROXY_SSL_HEADER tells Django to trust the
+# X-Forwarded-Proto header when deciding if a request is secure — IF the
+# proxy actually sends one. Runflare's does not, so SECURE_SSL_REDIRECT
+# defaults to False here (an infinite redirect loop otherwise, since Django
+# would never see its own request as secure); override via env if a future
+# proxy in front of this does send that header correctly.
 if not DEBUG:
-    SECURE_SSL_REDIRECT = env.bool("SECURE_SSL_REDIRECT", default=True)
+    SECURE_SSL_REDIRECT = env.bool("SECURE_SSL_REDIRECT", default=False)
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True

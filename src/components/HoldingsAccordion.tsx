@@ -31,34 +31,70 @@ export default function HoldingsAccordion({
                 onClick={() => setOpenIndex(isOpen ? null : i)}
                 aria-label={isOpen ? "بستن توضیحات" : "بیشتر بدانید"}
                 aria-expanded={isOpen}
-                className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-white/15 text-white/70 transition hover:border-white/40 hover:text-white sm:h-12 sm:w-12"
+                className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border text-white/70 transition-all duration-300 hover:border-white/40 hover:text-white sm:h-12 sm:w-12 ${
+                  isOpen ? "border-white/40 bg-white/10 text-white" : "border-white/15"
+                }`}
               >
-                {isOpen ? <CloseIcon /> : <PlusIcon />}
+                <span
+                  className={`transition-transform duration-300 ease-out ${isOpen ? "rotate-45" : "rotate-0"}`}
+                >
+                  <PlusIcon />
+                </span>
               </button>
-              <span
-                dir="rtl"
-                className="flex-1 text-right text-base font-medium text-white sm:text-xl"
-              >
-                {h.name}
-              </span>
-              {h.logo && (
-                <Image
-                  src={h.logo}
-                  alt={h.name}
-                  width={185}
-                  height={62}
-                  unoptimized
-                  className="h-12 w-[135px] flex-shrink-0 rounded-full object-cover sm:h-16 sm:w-[185px]"
-                />
+              {h.url ? (
+                <a
+                  href={h.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  dir="rtl"
+                  className="flex flex-1 items-center justify-between gap-4 text-right transition hover:opacity-80"
+                >
+                  <span className="text-base font-medium text-white sm:text-xl">{h.name}</span>
+                  {h.logo && (
+                    <Image
+                      src={h.logo}
+                      alt={h.name}
+                      width={185}
+                      height={62}
+                      unoptimized
+                      className="h-12 w-[135px] flex-shrink-0 rounded-full object-cover sm:h-16 sm:w-[185px]"
+                    />
+                  )}
+                </a>
+              ) : (
+                <>
+                  <span
+                    dir="rtl"
+                    className="flex-1 text-right text-base font-medium text-white sm:text-xl"
+                  >
+                    {h.name}
+                  </span>
+                  {h.logo && (
+                    <Image
+                      src={h.logo}
+                      alt={h.name}
+                      width={185}
+                      height={62}
+                      unoptimized
+                      className="h-12 w-[135px] flex-shrink-0 rounded-full object-cover sm:h-16 sm:w-[185px]"
+                    />
+                  )}
+                </>
               )}
             </div>
-            {isOpen && (
-              <div className="mt-4 border-t border-white/10 pt-4 text-right">
-                <p className="text-sm text-gray-400 sm:text-base">
-                  {h.description}
-                </p>
+            <div
+              className={`grid overflow-hidden transition-all duration-300 ease-in-out ${
+                isOpen ? "grid-rows-[1fr] mt-4 opacity-100" : "grid-rows-[0fr] mt-0 opacity-0"
+              }`}
+            >
+              <div className="overflow-hidden">
+                <div className="border-t border-white/10 pt-4 text-right">
+                  <p className="text-sm text-gray-400 sm:text-base">
+                    {h.description}
+                  </p>
+                </div>
               </div>
-            )}
+            </div>
           </div>
         );
       })}
@@ -71,19 +107,6 @@ function PlusIcon() {
     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M12 5v14M5 12h14"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function CloseIcon() {
-  return (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M6 6l12 12M18 6L6 18"
         stroke="currentColor"
         strokeWidth="1.8"
         strokeLinecap="round"

@@ -46,6 +46,7 @@ function Diamond({ src, featured }: { src: string; featured?: boolean }) {
           alt=""
           fill
           aria-hidden="true"
+          loading="eager"
           className="pointer-events-none object-contain"
         />
         <div className="relative z-10 flex h-[90px] w-[90px] items-center justify-center p-1 sm:h-[110px] sm:w-[110px] lg:h-[138px] lg:w-[138px]">
@@ -54,6 +55,7 @@ function Diamond({ src, featured }: { src: string; featured?: boolean }) {
             alt=""
             width={160}
             height={160}
+            loading="eager"
             className="h-full w-full object-contain"
           />
         </div>
@@ -69,6 +71,7 @@ function Diamond({ src, featured }: { src: string; featured?: boolean }) {
           alt=""
           width={160}
           height={160}
+          loading="eager"
           className="h-full w-full object-contain"
         />
       </div>

@@ -20,7 +20,7 @@ services:
     env_file: .env
     volumes:
       - ./deploy/data/static:/app/staticfiles
-      - ./deploy/data/media:/app/media
+      - ./deploy/data/media:/app/data/media
     depends_on:
       db:
         condition: service_healthy
@@ -47,7 +47,7 @@ services:
     volumes:
       - ./deploy/nginx/conf.d:/etc/nginx/conf.d:ro
       - ./deploy/data/static:/app/staticfiles:ro
-      - ./deploy/data/media:/app/media:ro
+      - ./deploy/data/media:/app/data/media:ro
       - ./deploy/certbot/conf:/etc/letsencrypt:ro
       - ./deploy/certbot/www:/var/www/certbot:ro
     depends_on:

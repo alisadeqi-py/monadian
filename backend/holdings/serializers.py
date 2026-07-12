@@ -6,4 +6,4 @@ from .models import HoldingCompany
 class HoldingCompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = HoldingCompany
-        fields = ["id", "name", "logo", "description", "order"]
+        fields = ["id", "name", "logo", "description", "url", "order"]

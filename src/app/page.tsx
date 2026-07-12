@@ -1,7 +1,7 @@
 import SlideShow from "@/components/SlideShow";
 import Slide from "@/components/Slide";
 import Hero from "@/components/Hero";
-import CertsDivider from "@/components/CertsDivider";
+import Services from "@/components/Services";
 import Articles from "@/components/Articles";
 import Holdings from "@/components/Holdings";
 import Licenses from "@/components/Licenses";
@@ -15,7 +15,7 @@ export default function Home() {
           <Hero />
         </Slide>
         <Slide index={1}>
-          <CertsDivider />
+          <Services />
         </Slide>
         <Slide index={2}>
           <Articles />

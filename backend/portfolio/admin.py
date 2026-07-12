@@ -1,10 +1,15 @@
 from django.contrib import admin
 
-from .models import PortfolioCategory, PortfolioImage, PortfolioItem
+from .models import PortfolioCategory, PortfolioImage, PortfolioItem, PortfolioService
 
 
 class PortfolioImageInline(admin.TabularInline):
     model = PortfolioImage
+    extra = 1
+
+
+class PortfolioServiceInline(admin.TabularInline):
+    model = PortfolioService
     extra = 1
 
 
@@ -18,9 +23,9 @@ class PortfolioCategoryAdmin(admin.ModelAdmin):
 
 @admin.register(PortfolioItem)
 class PortfolioItemAdmin(admin.ModelAdmin):
-    list_display = ("title", "category", "order", "is_active")
+    list_display = ("title", "category", "client", "date", "order", "is_active")
     list_editable = ("order", "is_active")
     list_filter = ("is_active", "category")
-    search_fields = ("title", "category__name")
+    search_fields = ("title", "category__name", "client")
     ordering = ("order", "-id")
-    inlines = [PortfolioImageInline]
+    inlines = [PortfolioServiceInline, PortfolioImageInline]

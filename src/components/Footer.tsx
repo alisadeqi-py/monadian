@@ -234,15 +234,7 @@ export default function Footer() {
             />
           </div>
 
-          <div className="order-3 flex flex-col items-end gap-3">
-            <Image
-              src="/assets/badges-strip.png"
-              alt="اتحادیه کشوری کسب و کارهای مجازی، نماد ساماندهی، نماد اعتماد الکترونیکی"
-              width={251}
-              height={80}
-              className="h-14 w-auto object-contain sm:h-16"
-            />
-          </div>
+          <div className="order-3 hidden sm:block" aria-hidden="true" />
         </div>
 
         <div className="mt-6 grid grid-cols-1 items-start gap-6 sm:grid-cols-3 sm:gap-8">

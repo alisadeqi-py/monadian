@@ -4,6 +4,8 @@ import PartnersCarousel from "./PartnersCarousel";
 const CARDS = [
   {
     title: "",
+
+    
     ministry: " مجوز موسسه فرهنگی هنری از وزارت فرهنگ و ارشاد اسلامی",
     icon: "/assets/license-badge-1.png",
   },
@@ -32,7 +34,7 @@ export default function Licenses() {
 
       <div className="relative mx-auto w-full max-w-[1720px] px-6 sm:px-10 lg:px-16">
         <h2 className="mb-5 text-right text-xl font-bold text-[#12203f] sm:text-2xl">
-          مجوزها<span className="font-medium text-gray-400"> دسترسی های فعال و لایسنس ها</span>
+          مجوزها<span className="font-medium text-gray-400"></span>
         </h2>
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3 lg:gap-16">

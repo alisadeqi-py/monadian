@@ -11,10 +11,14 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# NEXT_PUBLIC_* vars are inlined into the client bundle at build time, so
-# this must be supplied as a build arg (see docker-compose.prod.yml).
+# NEXT_PUBLIC_* vars are inlined into the client bundle at build time.
+# Prefer passing this as a --build-arg (see docker-compose.prod.yml); on
+# platforms that don't support build args, a committed .env.production file
+# is read automatically by `next build` instead. Deliberately NOT re-exported
+# via ENV here — doing so would set an empty-string env var when the arg is
+# omitted, which Next.js treats as already-defined and so would silently
+# override (blank out) the .env.production value.
 ARG NEXT_PUBLIC_API_URL
-ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN npm run build
