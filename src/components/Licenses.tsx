@@ -50,7 +50,7 @@ export default function Licenses() {
               <div className="flex self-start">
                 <p className="font-bold text-[#12203f] sm:text-lg">{c.title}</p>
               </div>
-              <div className="relative isolate flex w-full items-center gap-2 rounded-full px-7 py-3.5">
+              <div className="relative group isolate flex w-full items-center gap-2 rounded-full px-7 py-3.5">
                 <span
                   aria-hidden="true"
                   className="pointer-events-none absolute inset-0 -z-10 rounded-full bg-[url('/assets/license-pill-normal.png')] bg-[length:100%_100%] bg-no-repeat opacity-100 transition-opacity duration-300 group-hover:opacity-0"
