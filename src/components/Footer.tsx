@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { API_PUBLIC_URL } from "@/lib/api";
+import EnvelopIcon from "./EnvelopIcon";
 
 const ITEM_WIDTH = 160;
 
@@ -110,10 +111,6 @@ export default function Footer() {
 
   return (
     <footer className="relative flex min-h-screen w-full flex-col justify-center overflow-hidden bg-brand-navy py-16">
-      {/* The wave's cutout is transparent, so it must be clipped to a strip
-          backed by white (matching the section above) — left full-height,
-          its transparent top would just reveal the same navy behind it and
-          the wave would be invisible. */}
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-32 overflow-hidden bg-white sm:h-40 lg:h-48"
         aria-hidden="true"
@@ -128,16 +125,23 @@ export default function Footer() {
       </div>
 
       <div className="relative mx-auto w-full max-w-[1720px] px-6 sm:px-10 lg:px-16">
-        <h2 className="text-right text-2xl font-extrabold text-white sm:text-3xl">
-          موسسه منادیان فتح ایرانیان
-        </h2>
-
         <form
           id="contact-form"
           onSubmit={handleSubmit}
           className="mx-auto mt-8 flex w-full max-w-2xl flex-col gap-4"
         >
+          <h3 className="text-right text-2xl font-extrabold text-[#CEE0FA] sm:text-3xl">
+            موسسه منادیان فتح ایرانیان
+          </h3>
           <div className="flex flex-col gap-4 sm:flex-row">
+            <input
+              type="text"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              placeholder="نام و نام خانوادگی"
+              dir="rtl"
+              className="w-full rounded-xl bg-[#F9F9F9] px-5 py-4 text-right text-sm font-bold text-[#12203f] placeholder:text-[#12203f]/60 focus:outline-none focus:ring-2 focus:ring-brand-blue sm:w-3/5 sm:text-base"
+            />
             <input
               type="tel"
               value={phoneNumber}
@@ -145,15 +149,7 @@ export default function Footer() {
               required
               placeholder="شماره تماس"
               dir="rtl"
-              className="w-full rounded-xl bg-[#F9F9F9] px-5 py-4 text-right text-sm font-bold text-[#12203f] placeholder:text-[#12203f] focus:outline-none focus:ring-2 focus:ring-brand-blue sm:w-2/5 sm:text-base"
-            />
-            <input
-              type="text"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              placeholder="نام و نام خانوادگی"
-              dir="rtl"
-              className="w-full rounded-xl bg-[#F9F9F9] px-5 py-4 text-right text-sm font-bold text-[#12203f] placeholder:text-[#12203f] focus:outline-none focus:ring-2 focus:ring-brand-blue sm:w-3/5 sm:text-base"
+              className="w-full rounded-xl bg-[#F9F9F9] px-5 py-4 text-right text-sm font-bold text-[#12203f] placeholder:text-[#12203f]/60 focus:outline-none focus:ring-2 focus:ring-brand-blue sm:w-2/5 sm:text-base"
             />
           </div>
           <div className="w-full rounded-xl bg-[#F9F9F9] px-5 py-4">
@@ -166,8 +162,8 @@ export default function Footer() {
               placeholder="میتوانید متن کامل توضیح خود را در قسمت مشخص شده وارد کنید"
               dir="rtl"
               rows={4}
-              className="mt-2 w-full resize-none bg-transparent text-right text-xs text-gray-400 placeholder:text-gray-400 focus:outline-none sm:text-sm"
-          />
+              className="mt-2 w-full resize-none bg-transparent text-right text-xs text-[#12203f]/60 placeholder:text-[#12203f]/40 focus:outline-none sm:text-sm"
+            />
           </div>
           {status === "success" && (
             <p className="text-center text-sm font-bold text-green-400">
@@ -206,13 +202,20 @@ export default function Footer() {
           className="pointer-events-none absolute -bottom-8 -left-4 hidden w-56 opacity-50 sm:block lg:w-72"
         />
 
-        <div className="grid grid-cols-1 items-start gap-6 sm:grid-cols-3 sm:gap-8">
+        <div className="grid items-start gap-6 sm:grid-cols-3 sm:gap-8">
+          {/* Contact Info */}
           <div className="order-1 space-y-2.5 text-right">
             <h3 className="mb-1 text-sm font-bold text-white sm:text-base">اطلاعات تماس</h3>
             <p className="text-xs text-white/90 sm:text-sm">
               <span className="ml-2 text-white/40">•</span>
               <span className="text-white/70">پست الکترونیک</span>{" "}
-              <span dir="ltr">info@Monadian.ir</span>
+              <a
+                href="mailto:info@Monadian.ir"
+                dir="ltr"
+                className="text-blue-400 transition-colors hover:text-brand-yellow hover:underline"
+              >
+                info@Monadian.ir
+              </a>
             </p>
             <p className="text-xs text-white/90 sm:text-sm">
               <span className="ml-2 text-white/40">•</span>
@@ -220,51 +223,59 @@ export default function Footer() {
             </p>
             <p className="flex items-center justify-start gap-2 text-xs text-white/90 sm:text-sm">
               <span className="text-white/70">تلفن دفتر:</span>
-              <span dir="ltr">021-88821928</span>
+              <a
+                href="tel:+982188821928"
+                dir="ltr"
+                className="text-blue-400 transition-colors hover:text-brand-yellow hover:underline"
+              >
+                ۰۲۱ - ۸۸۸۲۱۹۲۸
+              </a>
               <PhoneIcon />
             </p>
           </div>
 
-          <div className="order-2 h-28 overflow-hidden rounded-2xl ring-1 ring-white/10 sm:h-32">
-            <iframe
-              title="موقعیت موسسه منادیان فتح ایرانیان"
-              src={`https://maps.google.com/maps?q=${OFFICE_LOCATION}&z=15&output=embed`}
-              className="h-full w-full border-0"
-              loading="lazy"
-            />
+          {/* Map */}
+          <div className="order-2 space-y-2">
+            <div className="h-28 overflow-hidden rounded-2xl ring-1 ring-white/10 sm:h-32">
+              <iframe
+                title="موقعیت موسسه منادیان فتح ایرانیان"
+                src={`https://maps.google.com/maps?q=${OFFICE_LOCATION}&z=15&output=embed`}
+                className="h-full w-full border-0"
+                loading="lazy"
+              />
+            </div>
+            <p className="flex items-center justify-center gap-2 text-center text-xs text-white/90 sm:text-sm">
+              <span>تهران، ضلع شمال شرقی میدان هفت تیر، کوچه شهید فلامکی (آذری)</span>
+              <LocationIcon />
+            </p>
           </div>
 
-          <div className="order-3 hidden sm:block" aria-hidden="true" />
-        </div>
-
-        <div className="mt-6 grid grid-cols-1 items-start gap-6 sm:grid-cols-3 sm:gap-8">
-          <div className="order-1 hidden sm:block" aria-hidden="true" />
-
-          <p className="order-2 flex items-center justify-center gap-2 text-center text-xs text-white/90 sm:text-sm">
-            <span>تهران، ضلع شمال شرقی میدان هفت تیر، کوچه شهید فلامکی(آذری)</span>
-            <LocationIcon />
-          </p>
-
-          <div className="order-3 flex flex-col gap-1.5">
+          {/* Newsletter */}
+          <div className="order-3 flex flex-col gap-1.5 text-right">
             <h3 className="text-xs font-bold text-white sm:text-sm">خبرنامه ما</h3>
             <form onSubmit={handleNewsletterSubmit} className="flex items-center gap-2">
-              <input
-                type="email"
-                value={newsletterEmail}
-                onChange={(e) => setNewsletterEmail(e.target.value)}
-                required
-                placeholder="ایمیل خود را وارد کنید..."
-                dir="rtl"
-                className="min-w-0 flex-1 rounded-xl bg-white/10 px-4 py-2.5 text-right text-xs text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
-              />
-              <button
-                type="submit"
-                disabled={newsletterStatus === "loading"}
-                aria-label="ارسال"
-                className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-brand-yellow text-[#12203f] transition hover:brightness-105 disabled:opacity-60"
-              >
-                <SendIcon />
-              </button>
+              <div className="relative flex-1">
+                <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white/50">
+                  <EnvelopIcon className="h-4 w-4" />
+                </div>
+                <input
+                  type="email"
+                  value={newsletterEmail}
+                  onChange={(e) => setNewsletterEmail(e.target.value)}
+                  required
+                  placeholder="ایمیل خود را وارد کنید..."
+                  dir="rtl"
+                  className="w-full rounded-xl border-2 border-white/30 bg-transparent px-4 py-2.5 pr-10 pl-20 text-right text-xs text-white placeholder:text-white/50 transition-all duration-200 focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/30 hover:border-white/50"
+                />
+                <button
+                  type="submit"
+                  disabled={newsletterStatus === "loading"}
+                  aria-label="ارسال"
+                  className="absolute left-2 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-md bg-[#E7E6F7] px-3 py-1.5 text-xs font-medium text-[#12203f] transition hover:brightness-105 disabled:opacity-60"
+                >
+                  ارسال
+                </button>
+              </div>
             </form>
             {newsletterStatus === "success" && (
               <p className="text-xs font-bold text-green-400">با موفقیت ثبت شد</p>
@@ -316,11 +327,6 @@ function Ribbon({
       style={{
         top,
         left: "50%",
-        // Capped so the wrapper's own rendered width can never outgrow the
-        // (deliberately width-limited, see SET_COUNT above) track content —
-        // on very wide screens this holds the ribbon at a fixed max width
-        // instead of stretching edge-to-edge, which would otherwise leave a
-        // real structural gap where the track runs out of content.
         width: `min(110%, ${RIBBON_WRAPPER_MAX_WIDTH}px)`,
         transform: `translate(-50%, 0) rotate(${rotate}deg)`,
       }}
@@ -372,14 +378,6 @@ function LocationIcon() {
         strokeLinejoin="round"
       />
       <circle cx="12" cy="10" r="2.2" stroke="currentColor" strokeWidth="1.5" />
-    </svg>
-  );
-}
-
-function SendIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: "scaleX(-1)" }}>
-      <path d="M20 4L3 11l6 2.5M20 4l-4 16-7-6.5M20 4L9 13.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
