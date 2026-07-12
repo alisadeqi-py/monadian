@@ -42,3 +42,40 @@ body {
   will-change: transform;
   backface-visibility: hidden;
 }
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 25s linear infinite;
+  width: max-content;
+}
+
+/* Pause animation on hover */
+.animate-scroll:hover {
+  animation-play-state: paused;
+}
+
+/* Optional: Add gradient fade on edges for better visual */
+.overflow-hidden {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 10%,
+    black 90%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 10%,
+    black 90%,
+    transparent
+  );
+}
