@@ -3,6 +3,16 @@ import Image from "next/image";
 export default function Hero() {
   return (
     <section className="relative min-h-screen w-full overflow-hidden">
+      <div className="absolute right-0 top-1/2 hidden -translate-y-1/2 md:block z-10">
+        <Image
+          src="/assets/pattern.svg"
+          alt=""
+          width={391}
+          height={582}
+          aria-hidden="true"
+          className="h-auto w-full"
+        />
+      </div>
       <Image
         src="/assets/mountain.png"
         alt="فضای اداری موسسه منادیان فتح ایرانیان"
