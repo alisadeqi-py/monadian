@@ -35,7 +35,7 @@ export default function Licenses() {
           مجوزها<span className="font-medium text-gray-400"></span>
         </h2>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3 lg:gap-16">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3 sm:grid-cols-2 lg:gap-16">
           {CARDS.map((c, i) => (
             <div key={i} className="flex w-full flex-col gap-4 text-center items-start">
               <div className="w-40 h-20 text-start flex mb-4">
@@ -65,7 +65,7 @@ export default function Licenses() {
                     <CornerIcon width={20} height={20} />
                     {c.ministry}
                   </span>
-                  <span className="w-5 h-5">
+                  <span className="w-5 h-5 hidden md:flex">
                     <Image
                       src="/assets/logo-mark.png"
                       alt=""
