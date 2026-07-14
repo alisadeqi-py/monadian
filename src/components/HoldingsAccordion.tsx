@@ -28,10 +28,11 @@ export default function HoldingsAccordion({
         return (
           <div
             key={h.id}
-            className={`rounded-xl border transition-all duration-300 ${isOpen
+            className={`rounded-xl border transition-all duration-300 ${
+              isOpen
                 ? "border-white/20 bg-white/5 shadow-lg shadow-black/20"
                 : "border-white/10 bg-transparent hover:border-white/15"
-              }`}
+            }`}
           >
             <div className="p-4 sm:p-6">
               {/* Header - Mobile First */}
@@ -41,14 +42,16 @@ export default function HoldingsAccordion({
                   onClick={() => setOpenIndex(isOpen ? null : i)}
                   aria-label={isOpen ? "بستن توضیحات" : "بیشتر بدانید"}
                   aria-expanded={isOpen}
-                  className={`relative flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full transition-all duration-300 active:scale-95 sm:h-12 sm:w-12 ${isOpen
+                  className={`relative flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full transition-all duration-300 active:scale-95 sm:h-12 sm:w-12 ${
+                    isOpen
                       ? "border-2 border-white/40 bg-white/10 text-white shadow-lg shadow-white/10"
                       : "border border-white/15 bg-transparent text-white/60 hover:border-white/30 hover:text-white hover:shadow-lg hover:shadow-white/5"
-                    }`}
+                  }`}
                 >
                   <span
-                    className={`transition-transform duration-300 ease-out ${isOpen ? "rotate-45" : "rotate-0"
-                      }`}
+                    className={`transition-transform duration-300 ease-out ${
+                      isOpen ? "rotate-45" : "rotate-0"
+                    }`}
                   >
                     <PlusIcon />
                   </span>
@@ -104,14 +107,15 @@ export default function HoldingsAccordion({
 
               {/* Description with smooth animation */}
               <div
-                className={`grid overflow-hidden transition-all duration-300 ease-in-out ${isOpen
+                className={`grid overflow-hidden transition-all duration-300 ease-in-out ${
+                  isOpen
                     ? "grid-rows-[1fr] opacity-100"
                     : "grid-rows-[0fr] opacity-0"
-                  }`}
+                }`}
               >
                 <div className="overflow-hidden">
                   <div className="mt-3 border-t border-white/10 pt-3 sm:mt-4 sm:pt-4">
-                    <p className="text-xs leading-relaxed text-gray-300 sm:text-sm lg:text-base">
+                    <p className="text-justify text-xs leading-relaxed text-gray-300 sm:text-sm lg:text-base">
                       {h.description}
                     </p>
                   </div>
