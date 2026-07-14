@@ -47,7 +47,7 @@ function DescriptionSlide({ item }: { item: PortfolioItem }) {
   return (
     <div
       dir="rtl"
-      className="flex min-h-screen w-full flex-col justify-center overflow-x-clip px-6 py-20 sm:py-16"
+      className="flex min-h-screen w-full flex-col justify-center overflow-x-clip px-4 py-12 sm:px-6 sm:py-16"
       style={{
         backgroundImage: "url(/assets/hero-background.webp)",
         backgroundSize: "cover",
@@ -55,7 +55,7 @@ function DescriptionSlide({ item }: { item: PortfolioItem }) {
       }}
     >
       <div className="mx-auto w-full max-w-7xl">
-        <h2 className="mb-4 text-right text-lg font-bold text-[#1B2028] sm:text-xl">
+        <h2 className="mb-3 text-right text-base font-bold text-[#1B2028] sm:mb-4 sm:text-xl">
           توضیح کارنامه فنی
           <span className="font-medium text-gray-500">: شناسنامه کارهای انجام شده</span>
         </h2>
@@ -66,27 +66,28 @@ function DescriptionSlide({ item }: { item: PortfolioItem }) {
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
-          className="relative overflow-visible rounded-lg bg-white/90 p-6 shadow-[0_40px_80px_-30px_rgba(15,23,42,0.35)] backdrop-blur-sm sm:p-10">
+          className="relative overflow-visible rounded-lg bg-white/90 p-4 shadow-[0_40px_80px_-30px_rgba(15,23,42,0.35)] backdrop-blur-sm sm:p-10"
+        >
           <Image
             src="/assets/portfolio-detail-grid.png"
             alt=""
             width={313}
             height={210}
             aria-hidden="true"
-            className="pointer-events-none absolute right-6 top-6 z-0 hidden w-32 opacity-60 sm:block sm:w-40"
+            className="pointer-events-none absolute right-4 top-4 z-0 hidden w-24 opacity-60 sm:right-6 sm:top-6 sm:block sm:w-40"
           />
 
-          <h1 className="relative z-10 mb-4 text-right text-xl font-bold text-[#1B2028] sm:text-2xl">
+          <h1 className="relative z-10 mb-3 text-right text-lg font-bold text-[#1B2028] sm:mb-4 sm:text-2xl">
             {item.title}
           </h1>
 
-          <div className="relative z-10 mb-8 flex flex-col-reverse items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="flex items-center gap-2 text-base font-bold text-[#1B2028] sm:text-lg">
+          <div className="relative z-10 mb-6 flex flex-col-reverse items-start gap-3 sm:mb-8 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+            <h2 className="flex items-center gap-2 text-sm font-bold text-[#1B2028] sm:text-lg">
               <ChecklistIcon />
               شناسنامه و چالش های پروژه
             </h2>
             {item.date && (
-              <span className="flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs text-gray-600 ring-1 ring-black/5 sm:text-sm">
+              <span className="flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-xs text-gray-600 ring-1 ring-black/5 sm:px-4 sm:py-2 sm:text-sm">
                 <CalendarIcon />
                 تاریخ انجام پروژه:
                 <span className="font-bold text-[#1B2028]">{item.date}</span>
@@ -94,10 +95,10 @@ function DescriptionSlide({ item }: { item: PortfolioItem }) {
             )}
           </div>
 
-          <div className="grid md:grid-cols-4 md:gap-6">
-            <div className="relative w-[15rem]">
-              <div
-                className="relative z-10 flex w-full flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-xl ring-1 ring-black/10 md:translate-x-6 xl:translate-x-16 2xl:translate-x-40">
+          <div className="grid gap-6 md:grid-cols-4 md:gap-6">
+            {/* Mobile-first card */}
+            <div className="relative mx-auto w-full max-w-[15rem] md:mx-0">
+              <div className="relative z-10 flex w-full flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-xl ring-1 ring-black/10 md:translate-x-6 xl:translate-x-16 2xl:translate-x-40">
                 <div
                   className="relative aspect-[3/5] w-full"
                   style={{
@@ -114,8 +115,8 @@ function DescriptionSlide({ item }: { item: PortfolioItem }) {
                     />
                   )}
                 </div>
-                <div className="px-4 py-2.5 text-right">
-                  <span className="block text-xs text-gray-500">{item.category}</span>
+                <div className="px-3 py-2 text-right sm:px-4 sm:py-2.5">
+                  <span className="block text-[10px] text-gray-500 sm:text-xs">{item.category}</span>
                   <span className="block text-sm font-bold text-[#1B2028] sm:text-base">
                     {item.client}
                   </span>
@@ -123,16 +124,17 @@ function DescriptionSlide({ item }: { item: PortfolioItem }) {
               </div>
             </div>
 
+            {/* Services */}
             {item.services.length > 0 && (
-              <div className="relative z-10 min-h-[180px]">
-                <h3 className="mb-4 text-right text-base font-bold text-[#1B2028] sm:text-lg">
+              <div className="relative z-10">
+                <h3 className="mb-3 text-right text-sm font-bold text-[#1B2028] sm:mb-4 sm:text-lg">
                   لیست خدمات ارائه شده:
                 </h3>
-                <ul className="space-y-3">
+                <ul className="space-y-2 sm:space-y-3">
                   {item.services.map((service) => (
                     <li
                       key={service.id}
-                      className="flex items-center gap-2 text-right text-base text-gray-600 sm:text-lg"
+                      className="flex items-center gap-2 text-right text-sm text-gray-600 sm:text-lg"
                     >
                       <BulletIcon />
                       {service.title}
@@ -142,32 +144,33 @@ function DescriptionSlide({ item }: { item: PortfolioItem }) {
               </div>
             )}
 
-            <div className="relative z-10 min-h-[180px]">
-              <h3 className="mb-4 text-right text-base font-bold text-[#1B2028] sm:text-lg">
+            {/* Description */}
+            <div className="relative z-10 col-span-1 md:col-span-2">
+              <h3 className="mb-3 text-right text-sm font-bold text-[#1B2028] sm:mb-4 sm:text-lg">
                 شرح کلی پروژه
               </h3>
               {lines.length > 0 ? (
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {lines.map((line, i) => (
                     <p
                       key={i}
-                      className="border-b border-dotted border-gray-400 pb-2 text-right text-base leading-relaxed text-gray-600 sm:text-lg"
+                      className="border-b border-dotted border-gray-300 pb-2 text-right text-sm leading-relaxed text-gray-600 sm:pb-3 sm:text-lg"
                     >
                       {line}
                     </p>
                   ))}
                 </div>
               ) : (
-                <p className="border-b border-dotted border-gray-400 pb-2 text-right text-sm text-gray-500">
+                <p className="border-b border-dotted border-gray-300 pb-2 text-right text-sm text-gray-500">
                   توضیحاتی برای این نمونه کار ثبت نشده است.
                 </p>
               )}
             </div>
           </div>
 
-          <div className="relative z-10 mt-10 flex flex-col items-center gap-2 text-gray-500">
+          <div className="relative z-10 mt-8 flex flex-col items-center gap-2 text-gray-500 sm:mt-10">
             <ScrollDownIcon />
-            <span className="text-xs">به پایین حرکت دهید</span>
+            <span className="text-[10px] sm:text-xs">به پایین حرکت دهید</span>
           </div>
         </div>
       </div>
@@ -218,50 +221,87 @@ function BulletIcon() {
 
 function VideoSlide({ item }: { item: PortfolioItem }) {
   return (
-    <section className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-black">
-      <span className="absolute right-6 top-24 z-10 rounded-full bg-black/50 px-3 py-1 text-xs font-semibold text-white sm:top-6">
+    <section className="relative grid h-screen w-full place-items-center overflow-hidden bg-black">
+      <span className="absolute right-4 top-20 z-10 rounded-full bg-black/50 px-2.5 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm sm:right-6 sm:top-6 sm:px-3 sm:py-1 sm:text-xs">
         پیش نمایش
       </span>
-      <video
-        key={item.video}
-        src={item.video ?? undefined}
-        autoPlay
-        muted
-        loop
-        controls
-        playsInline
-        preload="auto"
-        suppressHydrationWarning
-        className="absolute inset-0 h-full w-full object-cover"
-      />
+
+      {/* Grid container for perfect centering */}
+      <div className="grid h-full w-full place-items-center">
+        <video
+          key={item.video}
+          src={item.video ?? undefined}
+          autoPlay
+          muted
+          loop
+          controls
+          playsInline
+          preload="auto"
+          suppressHydrationWarning
+          className={`
+            // Grid centering
+            col-start-1 row-start-1
+            // Responsive sizing
+            w-full h-full
+            // Mobile: Contain with black bars
+            object-contain
+            // Desktop: Cover with centering
+            md:object-cover
+            transition-all duration-300
+          `}
+        />
+      </div>
+
+      {/* Mobile overlay */}
+      <div className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t from-black/40 to-transparent pointer-events-none sm:hidden" />
     </section>
   );
 }
 
 function AparatSlide({ item }: { item: PortfolioItem }) {
   return (
-    <section className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-black">
-      <span className="absolute right-6 top-6 z-10 rounded-full bg-black/50 px-3 py-1 text-xs font-semibold text-white">
+    <section className="relative grid h-screen w-full place-items-center overflow-hidden bg-black">
+      <span className="absolute right-4 top-20 z-10 rounded-full bg-black/50 px-2.5 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm sm:right-6 sm:top-6 sm:px-3 sm:py-1 sm:text-xs">
         پیش نمایش
       </span>
-      {/* Aparat's player is built for a 16:9 box; to fill the screen without
-          squashing it (which broke its own controls), oversize the iframe
-          per the video's real aspect ratio and center+clip it, the same way
-          `object-fit: cover` would work on a native <video>. */}
-      <iframe
-        src={item.aparat_src}
-        allowFullScreen
-        className="absolute left-1/2 top-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0"
-      />
+
+      {/* Grid container */}
+      <div className="grid h-full w-full place-items-center">
+        <div className="relative col-start-1 row-start-1 h-full w-full overflow-hidden">
+          <iframe
+            src={item.aparat_src}
+            allowFullScreen
+            className={`
+              absolute border-0
+              // Center using transform
+              left-1/2 top-1/2
+              -translate-x-1/2 -translate-y-1/2
+              // Responsive sizing
+              min-h-[100%] min-w-[100%]
+              w-auto h-auto
+              sm:h-[56.25vw] sm:min-h-full
+              sm:w-[177.78vh] sm:min-w-full
+            `}
+            style={{
+              maxWidth: 'none',
+              maxHeight: 'none',
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Mobile overlay */}
+      <div className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t from-black/40 to-transparent pointer-events-none sm:hidden" />
     </section>
   );
 }
+
 
 function GallerySlide({ item }: { item: PortfolioItem }) {
   return (
     <div
       dir="rtl"
-      className="relative flex h-screen w-full flex-col items-center justify-center overflow-x-hidden overflow-y-auto px-6 py-16 sm:px-16"
+      className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-x-hidden overflow-y-auto px-4 py-12 sm:px-6 sm:py-16"
       style={{
         backgroundImage: "url(/assets/portfolio-slide-bg.png)",
         backgroundSize: "cover",
@@ -274,14 +314,14 @@ function GallerySlide({ item }: { item: PortfolioItem }) {
         width={425}
         height={286}
         aria-hidden="true"
-        className="pointer-events-none absolute left-0 top-[68%] hidden w-[380px] -translate-y-1/2 opacity-40 sm:w-[460px] md:block lg:w-[560px]"
+        className="pointer-events-none absolute left-0 top-[68%] hidden w-[280px] -translate-y-1/2 opacity-40 md:w-[380px] lg:w-[560px]"
       />
 
       <PortfolioGallery
         images={item.images}
         title={item.title}
         heading={
-          <h2 className="text-lg font-bold text-[#1B2028] sm:text-xl">
+          <h2 className="mb-4 text-base font-bold text-[#1B2028] sm:mb-6 sm:text-xl">
             گالری تصاویر
             <span className="font-medium text-gray-500">: فعالیت های موسسه منادیان فتح ایرانیان</span>
           </h2>
@@ -295,7 +335,7 @@ function OtherProjectsSlide({ items }: { items: PortfolioItem[] }) {
   return (
     <div
       dir="rtl"
-      className="relative flex min-h-screen w-full flex-col items-center justify-center px-6 py-16 sm:px-16"
+      className="relative flex min-h-screen w-full flex-col items-center justify-center px-4 py-12 sm:px-6 sm:py-16"
       style={{
         backgroundImage: "url(/assets/portfolio-slide-bg.png)",
         backgroundSize: "cover",
@@ -303,17 +343,17 @@ function OtherProjectsSlide({ items }: { items: PortfolioItem[] }) {
       }}
     >
       <div className="w-full max-w-5xl">
-        <h2 className="mb-8 text-right text-lg font-bold text-[#1B2028] sm:text-xl">
+        <h2 className="mb-6 text-right text-base font-bold text-[#1B2028] sm:mb-8 sm:text-xl">
           دیگر پروژه های ما
           <span className="font-medium text-gray-500">: از شما برای دیدن دعوت می‌کنیم</span>
         </h2>
 
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-6">
           {items.map((p) => (
             <Link
               key={p.id}
               href={`/portfolio/${p.id}`}
-              className="group relative flex h-[220px] w-full flex-col justify-end overflow-hidden rounded-2xl bg-brand-card ring-1 ring-black/5 transition hover:ring-brand-yellow/60 sm:h-[260px]"
+              className="group relative flex h-[200px] w-full flex-col justify-end overflow-hidden rounded-2xl bg-brand-card ring-1 ring-black/5 transition active:scale-[0.98] hover:ring-brand-yellow/60 sm:h-[260px]"
             >
               {p.image && (
                 <div
@@ -323,9 +363,9 @@ function OtherProjectsSlide({ items }: { items: PortfolioItem[] }) {
                 />
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" aria-hidden="true" />
-              <div className="relative z-10 p-5">
-                <span className="text-xs text-gray-300 sm:text-sm">{p.category}</span>
-                <span className="mt-1 block text-base font-bold text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.6)] sm:text-lg">
+              <div className="relative z-10 p-4 sm:p-5">
+                <span className="text-[10px] text-gray-300 sm:text-sm">{p.category}</span>
+                <span className="mt-0.5 block text-sm font-bold text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.6)] sm:mt-1 sm:text-lg">
                   {p.title}
                 </span>
               </div>
