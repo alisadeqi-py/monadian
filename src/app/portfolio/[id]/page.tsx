@@ -1,9 +1,11 @@
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getPortfolioItem, type PortfolioItem } from "@/lib/api";
+import { getPortfolioItem, getPortfolioItems, type PortfolioItem } from "@/lib/api";
 import PortfolioGallery from "@/components/PortfolioGallery";
 import PortfolioSlideShow from "@/components/PortfolioSlideShow";
 import PortfolioSlide from "@/components/PortfolioSlide";
+import Footer from "@/components/Footer";
 
 export default async function PortfolioDetailPage({
   params,
@@ -13,6 +15,9 @@ export default async function PortfolioDetailPage({
   const item = await getPortfolioItem(Number(params.id));
   if (!item) notFound();
 
+  const allItems = await getPortfolioItems();
+  const otherItems = allItems.filter((i) => i.id !== item.id).slice(0, 3);
+
   const slides = [<DescriptionSlide key="description" item={item} />];
   if (item.video) {
     slides.push(<VideoSlide key="video" item={item} />);
@@ -20,6 +25,8 @@ export default async function PortfolioDetailPage({
     slides.push(<AparatSlide key="aparat" item={item} />);
   }
   if (item.images.length > 0) slides.push(<GallerySlide key="gallery" item={item} />);
+  if (otherItems.length > 0) slides.push(<OtherProjectsSlide key="other-projects" items={otherItems} />);
+  slides.push(<Footer key="footer" />);
 
   return (
     <PortfolioSlideShow>
@@ -282,6 +289,52 @@ function GallerySlide({ item }: { item: PortfolioItem }) {
           </h2>
         }
       />
+    </div>
+  );
+}
+
+function OtherProjectsSlide({ items }: { items: PortfolioItem[] }) {
+  return (
+    <div
+      dir="rtl"
+      className="relative flex min-h-screen w-full flex-col items-center justify-center px-6 py-16 sm:px-16"
+      style={{
+        backgroundImage: "url(/assets/portfolio-slide-bg.png)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <div className="w-full max-w-5xl">
+        <h2 className="mb-8 text-right text-lg font-bold text-[#1B2028] sm:text-xl">
+          دیگر پروژه های ما
+          <span className="font-medium text-gray-500">: از شما برای دیدن دعوت می‌کنیم</span>
+        </h2>
+
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6">
+          {items.map((p) => (
+            <Link
+              key={p.id}
+              href={`/portfolio/${p.id}`}
+              className="group relative flex h-[220px] w-full flex-col justify-end overflow-hidden rounded-2xl bg-brand-card ring-1 ring-black/5 transition hover:ring-brand-yellow/60 sm:h-[260px]"
+            >
+              {p.image && (
+                <div
+                  className="absolute inset-0 transition duration-300 group-hover:scale-105"
+                  style={{ backgroundImage: `url(${p.image})`, backgroundSize: "cover", backgroundPosition: "center" }}
+                  aria-hidden="true"
+                />
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" aria-hidden="true" />
+              <div className="relative z-10 p-5">
+                <span className="text-xs text-gray-300 sm:text-sm">{p.category}</span>
+                <span className="mt-1 block text-base font-bold text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.6)] sm:text-lg">
+                  {p.title}
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
