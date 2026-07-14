@@ -29,7 +29,7 @@ export default async function Articles() {
 
       <div className="relative mx-auto w-full max-w-6xl px-6">
         <h2 className="mb-6 text-right text-xl font-bold text-white sm:text-2xl">
-          نمونه کار ها و فعالیت ها<span className="font-medium text-slate-400">؛ پژوهش های آموزشی و اطلاعات کاربردی</span>
+          نمونه کار ها و فعالیت ها<span className="font-medium text-slate-400"></span>
         </h2>
 
         {articles.length === 0 ? (

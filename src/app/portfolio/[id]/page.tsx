@@ -49,7 +49,7 @@ function DescriptionSlide({ item }: { item: PortfolioItem }) {
       dir="rtl"
       className="flex min-h-screen w-full flex-col justify-center overflow-x-clip px-6 py-20 sm:py-16"
       style={{
-        backgroundImage: "url(/assets/portfolio-slide-bg.png)",
+        backgroundImage: "url(/assets/hero-background.webp)",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
@@ -60,7 +60,13 @@ function DescriptionSlide({ item }: { item: PortfolioItem }) {
           <span className="font-medium text-gray-500">: شناسنامه کارهای انجام شده</span>
         </h2>
 
-        <div className="relative overflow-visible rounded-lg bg-white/90 p-6 shadow-[0_40px_80px_-30px_rgba(15,23,42,0.35)] backdrop-blur-sm sm:p-10">
+        <div
+          style={{
+            backgroundImage: "url(/assets/portfolio-slide-bg.webp)",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+          className="relative overflow-visible rounded-lg bg-white/90 p-6 shadow-[0_40px_80px_-30px_rgba(15,23,42,0.35)] backdrop-blur-sm sm:p-10">
           <Image
             src="/assets/portfolio-detail-grid.png"
             alt=""
@@ -88,20 +94,12 @@ function DescriptionSlide({ item }: { item: PortfolioItem }) {
             )}
           </div>
 
-          <div className="grid gap-8 md:grid-cols-[280px_1fr_1.3fr] md:gap-6">
-            <div className="relative">
-              <Image
-                src="/assets/portfolio-detail-dots.png"
-                alt=""
-                width={193}
-                height={405}
-                aria-hidden="true"
-                className="pointer-events-none absolute -left-8 top-1/2 z-0 hidden w-32 -translate-y-1/2 opacity-70 sm:block md:-left-12 md:w-36"
-              />
-
-              <div className="relative z-10 flex w-full flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-xl ring-1 ring-black/10 md:-mt-6 md:translate-x-6 xl:translate-x-16 2xl:translate-x-24">
+          <div className="grid md:grid-cols-4 md:gap-6">
+            <div className="relative w-[15rem]">
+              <div
+                className="relative z-10 flex w-full flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-xl ring-1 ring-black/10 md:translate-x-6 xl:translate-x-16 2xl:translate-x-40">
                 <div
-                  className="relative aspect-[3/4] w-full"
+                  className="relative aspect-[3/5] w-full"
                   style={{
                     backgroundImage: "url(/assets/portfolio-card-texture.png)",
                     backgroundSize: "cover",

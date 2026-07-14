@@ -9,7 +9,7 @@ export default function HoldingsAccordion({
 }: {
   holdings: HoldingCompany[];
 }) {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [openIndex, setOpenIndex] = useState<number | null>(-1);
 
   if (holdings.length === 0) {
     return (
@@ -76,7 +76,7 @@ export default function HoldingsAccordion({
                       width={185}
                       height={62}
                       unoptimized
-                      className="h-12 w-[135px] flex-shrink-0 rounded-full object-cover sm:h-16 sm:w-[185px]"
+                      className="h-12 hidden sm:flex w-[135px] flex-shrink-0 rounded-full object-cover sm:h-16 sm:w-[185px]"
                     />
                   )}
                 </>
