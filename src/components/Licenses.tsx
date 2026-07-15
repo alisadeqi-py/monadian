@@ -3,25 +3,26 @@ import PartnersCarousel from "./PartnersCarousel";
 
 const CARDS = [
   {
-    title: " مجوز موسسه فرهنگی هنری",
-    ministry: " از وزارت فرهنگ و ارشاد اسلامی",
+    title: "مجوز موسسه فرهنگی هنری",
+    ministry: "از وزارت فرهنگ و ارشاد اسلامی",
     icon: "/assets/license-badge-1.png",
   },
   {
     title: "تاییدیه شرکت خلاق",
-    ministry: "  از معاونت علمی و دانش بنیان ریاست جمهوری",
+    ministry: "از معاونت علمی و دانش بنیان ریاست جمهوری",
     icon: "/assets/license-gov-seal.png",
   },
   {
-    title: "مجوز پایگاه خبری ",
-    ministry: " از وزارت فرهنگ و ارشاد اسلامی",
+    title: "مجوز پایگاه خبری",
+    ministry: "از وزارت فرهنگ و ارشاد اسلامی",
     icon: "/assets/license-badge-2.png",
   },
 ];
 
 export default function Licenses() {
   return (
-    <section className="relative flex min-h-screen w-full items-center overflow-hidden bg-white py-4">
+    <section className="relative flex min-h-screen w-full items-center overflow-hidden bg-white py-8 sm:py-12">
+      {/* Background Image */}
       <Image
         src="/assets/licenses-bg.png"
         alt=""
@@ -30,12 +31,17 @@ export default function Licenses() {
         className="pointer-events-none object-cover opacity-70"
       />
 
-      <div className="relative mx-auto w-full max-w-[1720px] px-6 sm:px-10 lg:px-16">
-        <h2 className="mb-5 text-right text-xl font-bold text-[#12203f] sm:text-2xl">
-          مجوزها<span className="font-medium text-gray-400"></span>
-        </h2>
+      <div className="relative mx-auto w-full max-w-[1720px] px-4 sm:px-6 lg:px-16">
+        {/* Section Header */}
+        <div className="mb-6 sm:mb-8">
+          <h2 className="text-right text-xl font-bold text-[#12203f] sm:text-2xl lg:text-3xl">
+            مجوزها
+            <span className="mr-2 font-medium text-gray-400"></span>
+          </h2>
+        </div>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3 sm:grid-cols-2 lg:gap-16">
+        {/* Licenses Grid - Mobile First */}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:gap-8">
           {CARDS.map((c, i) => (
             <div key={i} className="flex w-full flex-col gap-4 text-center sm:items-start items-center">
               <div className="w-40 h-20 flex sm:mb-4 mb-6">
@@ -80,39 +86,21 @@ export default function Licenses() {
           ))}
         </div>
 
-        <div className="relative">
-          <Image
-            src="/assets/chevron.png"
-            alt=""
-            width={135}
-            height={139}
-            aria-hidden="true"
-            className="pointer-events-none absolute -top-6 right-0 hidden w-10 opacity-70 sm:block lg:w-14"
-          />
-          <Image
-            src="/assets/chevron.png"
-            alt=""
-            width={135}
-            height={139}
-            aria-hidden="true"
-            className="pointer-events-none absolute bottom-0 left-4 hidden w-5 -scale-x-100 opacity-40 md:block lg:w-6"
-          />
-          <Image
-            src="/assets/chevron.png"
-            alt=""
-            width={135}
-            height={139}
-            aria-hidden="true"
-            className="pointer-events-none absolute -bottom-8 right-1/4 hidden w-16 opacity-30 lg:block xl:w-20"
-          />
-
-          <h3 className="relative mb-7 mt-20 text-right text-lg font-bold text-[#12203f] sm:text-xl">
-            <span className="flex items-center gap-2">
-              <CornerIcon width={24} height={24} />
-              برندهایی که افتخار همکاری داشتیم ؛
-              <span className="block font-medium text-gray-400 sm:mt-0 sm:inline">  گنجینه ای از تجربه های موفق </span>
-            </span>
-          </h3>
+        {/* Partners Section */}
+        <div className="relative mt-12 sm:mt-16 lg:mt-20">
+          {/* Partners Header */}
+          <div className="mb-6 sm:mb-8">
+            <h3 className="flex flex-col items-start gap-2 text-right text-base font-bold text-[#12203f] sm:flex-row sm:items-center sm:text-lg lg:text-xl">
+              <CornerIcon width={16} height={16} />
+              <span className="flex items-center gap-2">
+                برندهایی که افتخار همکاری داشتیم
+              </span>
+              <span className="text-sm font-medium text-gray-400 sm:text-base">
+                گنجینه‌ای از تجربه‌های موفق
+              </span>
+            </h3>
+            <div className="mr-auto mt-2 h-0.5 w-12 rounded-full bg-[#12203f]/10 sm:w-16" />
+          </div>
 
           <PartnersCarousel />
         </div>
@@ -123,7 +111,14 @@ export default function Licenses() {
 
 function CornerIcon({ width = 16, height = 16 }) {
   return (
-    <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#12203f]">
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="flex-shrink-0 text-[#12203f]"
+    >
       <path
         d="M19 5v6a4 4 0 0 1-4 4H6M6 15l4-4M6 15l4 4"
         stroke="currentColor"

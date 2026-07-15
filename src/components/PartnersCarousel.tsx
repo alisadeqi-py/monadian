@@ -8,7 +8,7 @@ const PARTNERS = [
   { src: "/assets/rah.svg", title: "وزارت راه و شهرسازی" },
   { src: "/assets/tehran.svg", title: "شهرداری تهران" },
   { src: "/assets/farhang.svg", title: "وزارت فرهنگ و ارشاد اسلامی" },
-  { src: "/assets/miras.svg", title: " وزارت میراث و گردشگری" },
+  { src: "/assets/miras.svg", title: "وزارت میراث و گردشگری" },
 ];
 
 export default function PartnersCarousel() {
@@ -16,22 +16,18 @@ export default function PartnersCarousel() {
   const singleSetRef = useRef<HTMLDivElement>(null);
   const [isPaused, setIsPaused] = useState(false);
   const [infinitePartners, setInfinitePartners] = useState(() => {
-    // Initial fallback – will be recalculated on mount
     return [...PARTNERS, ...PARTNERS, ...PARTNERS];
   });
   const [singleSetWidth, setSingleSetWidth] = useState(0);
 
-  // Measure a single set width and calculate required copies
   useLayoutEffect(() => {
     const measure = () => {
       if (!singleSetRef.current) return;
       const setWidth = singleSetRef.current.scrollWidth;
       if (setWidth === 0) return;
       const viewportWidth = window.innerWidth;
-      // We need at least 2 sets to fill the viewport, plus 1 extra for smooth looping
-      const copiesNeeded = Math.ceil((viewportWidth * 2) / setWidth) + 1;
-      // Ensure at least 3 copies
-      const copies = Math.max(copiesNeeded, 3);
+      const copiesNeeded = Math.ceil((viewportWidth * 2) / setWidth) + 2;
+      const copies = Math.max(copiesNeeded, 4);
       setSingleSetWidth(setWidth);
       setInfinitePartners(Array(copies).fill(PARTNERS).flat());
     };
@@ -41,14 +37,13 @@ export default function PartnersCarousel() {
     return () => window.removeEventListener("resize", measure);
   }, []);
 
-  // Infinite animation
   useEffect(() => {
     const track = trackRef.current;
     if (!track || singleSetWidth === 0) return;
 
     let animationId: number;
     let position = 0;
-    const speed = 0.3; // pixels per frame
+    const speed = 0.3;
 
     const animate = () => {
       if (!isPaused) {
@@ -62,7 +57,6 @@ export default function PartnersCarousel() {
     };
 
     animationId = requestAnimationFrame(animate);
-
     return () => cancelAnimationFrame(animationId);
   }, [isPaused, singleSetWidth]);
 
@@ -70,16 +64,16 @@ export default function PartnersCarousel() {
   const handleMouseLeave = () => setIsPaused(false);
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-2 sm:gap-3">
       <div
-        className="relative flex-1 overflow-hidden px-1 py-2"
+        className="relative flex-1 overflow-hidden px-1 py-2 sm:py-3"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        {/* Hidden measurement row – only one set */}
+        {/* Hidden measurement row */}
         <div
           ref={singleSetRef}
-          className="invisible absolute flex items-center gap-6 sm:gap-8 lg:gap-16"
+          className="invisible absolute flex items-center gap-4 sm:gap-6 lg:gap-10"
           aria-hidden="true"
         >
           {PARTNERS.map((p, i) => (
@@ -87,10 +81,10 @@ export default function PartnersCarousel() {
           ))}
         </div>
 
-        {/* Animated track with dynamically duplicated partners */}
+        {/* Animated track */}
         <div
           ref={trackRef}
-          className="flex items-center gap-6 sm:gap-8 lg:gap-16"
+          className="flex items-center gap-4 sm:gap-6 lg:gap-10"
           style={{ width: "max-content", willChange: "transform" }}
         >
           {infinitePartners.map((p, i) => (
@@ -102,22 +96,27 @@ export default function PartnersCarousel() {
   );
 }
 
-// Diamond and NavDiamond components remain exactly as you had them
 function Diamond({ src, title }: { src: string; title?: string }) {
-
   return (
-    <div className="relative flex flex-col h-36 w-36 flex-shrink-0 cursor-pointer items-center justify-center transition-transform duration-300 ease-out hover:scale-110 sm:h-44 sm:w-44 lg:h-[200px] lg:w-[200px]">
-      <div className="relative z-10 flex h-[90px] w-[90px] items-center justify-center p-1 sm:h-[110px] sm:w-[110px] lg:h-[138px] lg:w-[138px]">
+    <div className="group relative flex flex-col flex-shrink-0 cursor-pointer items-center justify-center transition-all duration-300 ease-out hover:scale-105">
+      {/* Logo Container */}
+      <div className="relative flex h-[80px] w-[80px] items-center justify-center p-3 transition-all duration-300 group-hover:bg-white group-hover:shadow-lg sm:h-[100px] sm:w-[100px] sm:p-4 lg:h-[120px] lg:w-[120px]">
         <Image
           src={src}
           alt=""
-          width={160}
-          height={160}
+          width={120}
+          height={120}
           loading="eager"
-          className="h-full w-full object-contain"
+          className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
         />
       </div>
-      <p className="flex-1 bg-white rounded-xl text-center p-2 flex items-center">{title}</p>
+
+      {/* Title - Hidden on mobile, shown on hover */}
+      {title && (
+        <div className="absolute -bottom-8 left-1/2 w-max -translate-x-1/2 rounded-lg bg-white/95 px-3 py-1 text-center text-xs font-medium text-[#12203f] opacity-0 shadow-lg transition-all duration-300 group-hover:bottom-0 group-hover:opacity-100 sm:-bottom-10 sm:group-hover:bottom-1 lg:text-sm">
+          {title}
+        </div>
+      )}
     </div>
   );
 }
