@@ -89,17 +89,18 @@ export default function Licenses() {
         {/* Partners Section */}
         <div className="relative mt-12 sm:mt-16 lg:mt-20">
           {/* Partners Header */}
-          <div className="mb-6 sm:mb-8">
+          <div className="sm:mb-8">
             <h3 className="flex flex-col items-start gap-2 text-right text-base font-bold text-[#12203f] sm:flex-row sm:items-center sm:text-lg lg:text-xl">
-              <CornerIcon width={16} height={16} />
               <span className="flex items-center gap-2">
-                برندهایی که افتخار همکاری داشتیم
+                <CornerIcon width={16} height={16} />
+                <span className="flex items-center gap-2">
+                  برندهایی که افتخار همکاری داشتیم
+                </span>
               </span>
               <span className="text-sm font-medium text-gray-400 sm:text-base">
                 گنجینه‌ای از تجربه‌های موفق
               </span>
             </h3>
-            <div className="mr-auto mt-2 h-0.5 w-12 rounded-full bg-[#12203f]/10 sm:w-16" />
           </div>
 
           <PartnersCarousel />
