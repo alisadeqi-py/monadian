@@ -6,37 +6,11 @@ import { API_PUBLIC_URL } from "@/lib/api";
 import EnvelopIcon from "./EnvelopIcon";
 
 const ITEM_WIDTH = 160;
-
-// One "set" is repeated, then that whole set is duplicated exactly once —
-// the standard infinite-marquee technique — so translateX(-50%) always
-// lands on an identical frame.
-//
-// NOTE: this project has repeatedly hit a real, reproducible Chromium
-// rendering bug where a rotated + overflow:hidden + transform-animated
-// element goes intermittently blank once its own pixel width gets large
-// (empirically confirmed via stress testing at SET_COUNT 24/32/48 — all
-// blanked for a sustained span every cycle, regardless of whether the
-// content inside is a gradient, many clip-path divs, or a single tiled SVG
-// texture, ruling out "too many DOM nodes" as the cause). 20 is the largest
-// value verified with zero blanking across many rounds of testing — do not
-// raise this without re-running that stress test.
 const SET_COUNT = 20;
 const SET_WIDTH = ITEM_WIDTH * SET_COUNT;
-
-// Because the track content can't safely be made arbitrarily wide (see
-// above), the ribbon's own wrapper is capped at a fixed max width instead of
-// scaling forever with viewport — otherwise an ultra-wide screen (3440px,
-// 4K) would make the visible window wider than the track, producing a real,
-// permanent gap. Kept comfortably below SET_WIDTH for margin.
 const RIBBON_WRAPPER_MAX_WIDTH = 2800;
 const TRACK_SEGMENTS = Array.from({ length: SET_COUNT * 2 });
 
-// Diagonal cut: baked once into a tiny repeating SVG texture (one background
-// layer, tiled by the browser) instead of dozens of overlapping clip-path
-// divs — a single tiled image is far cheaper to composite than many
-// individually-transformed/clipped elements, which is what caused blank-frame
-// rendering glitches at wide track sizes. RIBBON_HEIGHT must match the
-// track's rendered height (h-full inside the h-14/56px wrapper).
 const RIBBON_HEIGHT = 56;
 const STRIPE_ANGLE_DEG = 65;
 const STRIPE_RUN = RIBBON_HEIGHT / Math.tan((STRIPE_ANGLE_DEG * Math.PI) / 180);
@@ -110,9 +84,10 @@ export default function Footer() {
   }
 
   return (
-    <footer className="relative flex min-h-screen w-full flex-col justify-center overflow-hidden bg-brand-navy py-16">
+    <footer className="relative flex min-h-screen w-full flex-col justify-center overflow-hidden bg-brand-navy py-12 sm:py-16">
+      {/* Wave Background */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-32 overflow-hidden bg-white sm:h-40 lg:h-48"
+        className="pointer-events-none absolute inset-x-0 top-0 h-24 overflow-hidden bg-white sm:h-32 lg:h-40"
         aria-hidden="true"
       >
         <Image
@@ -124,23 +99,24 @@ export default function Footer() {
         />
       </div>
 
-      <div className="relative mx-auto w-full max-w-[1720px] px-6 sm:px-10 lg:px-16">
+      <div className="relative mx-auto w-full max-w-[1720px] px-4 sm:px-6 lg:px-16">
+        {/* Contact Form */}
         <form
           id="contact-form"
           onSubmit={handleSubmit}
-          className="mx-auto mt-8 flex w-full max-w-2xl flex-col gap-4"
+          className="mx-auto mt-6 flex w-full max-w-2xl flex-col gap-3 sm:mt-8 sm:gap-4"
         >
-          <h3 className="text-right text-2xl font-extrabold text-[#CEE0FA] sm:text-3xl">
+          <h3 className="text-right text-xl font-extrabold text-[#CEE0FA] sm:text-2xl lg:text-3xl">
             موسسه منادیان فتح ایرانیان
           </h3>
-          <div className="flex flex-col gap-4 sm:flex-row">
+          <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
             <input
               type="text"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               placeholder="نام و نام خانوادگی"
               dir="rtl"
-              className="w-full rounded-xl bg-[#F9F9F9] px-5 py-4 text-right text-sm font-bold text-[#12203f] placeholder:text-[#12203f]/60 focus:outline-none focus:ring-2 focus:ring-brand-blue sm:w-3/5 sm:text-base"
+              className="w-full rounded-xl bg-[#F9F9F9] px-4 py-3 text-right text-sm font-bold text-[#12203f] placeholder:text-[#12203f]/60 focus:outline-none focus:ring-2 focus:ring-brand-blue sm:w-3/5 sm:px-5 sm:py-4 sm:text-base"
             />
             <input
               type="tel"
@@ -149,10 +125,10 @@ export default function Footer() {
               required
               placeholder="شماره تماس"
               dir="rtl"
-              className="w-full rounded-xl bg-[#F9F9F9] px-5 py-4 text-right text-sm font-bold text-[#12203f] placeholder:text-[#12203f]/60 focus:outline-none focus:ring-2 focus:ring-brand-blue sm:w-2/5 sm:text-base"
+              className="w-full rounded-xl bg-[#F9F9F9] px-4 py-3 text-right text-sm font-bold text-[#12203f] placeholder:text-[#12203f]/60 focus:outline-none focus:ring-2 focus:ring-brand-blue sm:w-2/5 sm:px-5 sm:py-4 sm:text-base"
             />
           </div>
-          <div className="w-full rounded-xl bg-[#F9F9F9] px-5 py-4">
+          <div className="w-full rounded-xl bg-[#F9F9F9] px-4 py-3 sm:px-5 sm:py-4">
             <p className="text-right text-sm font-bold text-[#12203f] sm:text-base">
               ثبت درخواست
             </p>
@@ -161,7 +137,7 @@ export default function Footer() {
               onChange={(e) => setMessage(e.target.value)}
               placeholder="میتوانید متن کامل توضیح خود را در قسمت مشخص شده وارد کنید"
               dir="rtl"
-              rows={4}
+              rows={3}
               className="mt-2 w-full resize-none bg-transparent text-right text-xs text-[#12203f]/60 placeholder:text-[#12203f]/40 focus:outline-none sm:text-sm"
             />
           </div>
@@ -178,33 +154,35 @@ export default function Footer() {
         </form>
       </div>
 
-      <div className="relative mt-12 h-[150px] sm:h-[170px]">
+      {/* Ribbon Section */}
+      <div className="relative h-[130px] sm:h-[150px] lg:h-[170px]">
         <Ribbon rotate={-3} top={0} colors={["#0B63E5", "#061C3D"]} />
-        <Ribbon rotate={3} top={95} colors={["#061C3D", "#0B63E5"]} reverse />
+        <Ribbon rotate={3} top={85} colors={["#061C3D", "#0B63E5"]} reverse />
 
         <button
           type="submit"
           form="contact-form"
           disabled={status === "loading"}
-          className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-brand-yellow px-10 py-4 text-sm font-extrabold text-[#12203f] shadow-lg transition hover:brightness-105 disabled:opacity-60 sm:px-12 sm:py-4 sm:text-base"
+          className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-brand-yellow px-8 py-3 text-sm font-extrabold text-[#12203f] shadow-lg transition hover:brightness-105 disabled:opacity-60 sm:px-10 sm:py-3.5 sm:text-base lg:px-12 lg:py-4"
         >
           {status === "loading" ? "در حال ارسال..." : "ارسال درخواست"}
         </button>
       </div>
 
-      <div className="relative mx-auto w-full max-w-[1720px] px-6 pb-8 pt-6 sm:px-10 lg:px-16">
+      {/* Footer Bottom */}
+      <div className="relative mx-auto w-full max-w-[1720px] px-4 pb-6 pt-6 sm:px-6 lg:px-16">
         <Image
           src="/assets/footer-grid-pattern.png"
           alt=""
           width={389}
           height={261}
           aria-hidden="true"
-          className="pointer-events-none absolute -bottom-8 -left-4 hidden w-56 opacity-50 sm:block lg:w-72"
+          className="pointer-events-none absolute -bottom-6 -left-4 hidden w-44 opacity-50 sm:block lg:w-56"
         />
 
         <div className="grid items-end gap-6 sm:grid-cols-3 sm:gap-8">
           {/* Contact Info */}
-          <div className="order-1 space-y-2.5 text-right">
+          <div className="order-1 space-y-2 text-right">
             <h3 className="mb-1 text-sm font-bold text-white sm:text-base">اطلاعات تماس</h3>
             <p className="text-xs text-white/90 sm:text-sm">
               <span className="ml-2 text-white/40">•</span>
@@ -219,7 +197,7 @@ export default function Footer() {
             </p>
             <p className="text-xs text-white/90 sm:text-sm">
               <span className="ml-2 text-white/40">•</span>
-              <span className="text-white/70">ساعت کاری</span> شنبه تا چهارشنبه ۹ تا ۱۷
+              <span className="text-white/70">ساعت کاری</span> شنبه تا چهارشنبه ۸ تا ۱۷
             </p>
             <p className="flex items-center justify-start gap-2 text-xs text-white/90 sm:text-sm">
               <PhoneIcon />
@@ -235,8 +213,8 @@ export default function Footer() {
           </div>
 
           {/* Map */}
-          <div className="order-2 space-y-2">
-            <div className="h-28 overflow-hidden rounded-2xl ring-1 ring-white/10 sm:h-32">
+          <div className="order-2 space-y-1.5">
+            <div className="h-24 overflow-hidden rounded-2xl ring-1 ring-white/10 sm:h-28 lg:h-32">
               <iframe
                 title="موقعیت موسسه منادیان فتح ایرانیان"
                 src={`https://maps.google.com/maps?q=${OFFICE_LOCATION}&z=15&output=embed`}
@@ -244,7 +222,7 @@ export default function Footer() {
                 loading="lazy"
               />
             </div>
-            <p className="flex items-center justify-center gap-2 text-center text-xs text-white/90 sm:text-sm">
+            <p className="flex justify-center gap-2 text-center text-[10px] text-white/90 sm:text-xs lg:text-sm">
               <LocationIcon />
               <span>تهران، ضلع شمال شرقی میدان هفت تیر، کوچه شهید فلامکی (آذری)</span>
             </p>
@@ -256,7 +234,7 @@ export default function Footer() {
             <form onSubmit={handleNewsletterSubmit} className="flex items-center gap-2">
               <div className="relative flex-1">
                 <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white/50">
-                  <EnvelopIcon className="h-4 w-4" />
+                  <EnvelopIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </div>
                 <input
                   type="email"
@@ -265,13 +243,13 @@ export default function Footer() {
                   required
                   placeholder="ایمیل خود را وارد کنید..."
                   dir="rtl"
-                  className="w-full rounded-xl border-2 border-white/30 bg-transparent px-4 py-2.5 pr-10 pl-20 text-right text-xs text-white placeholder:text-white/50 transition-all duration-200 focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/30 hover:border-white/50"
+                  className="w-full rounded-xl border-2 border-white/30 bg-transparent px-3 py-2 pr-9 pl-16 text-right text-xs text-white placeholder:text-white/50 transition-all duration-200 focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/30 hover:border-white/50 sm:px-4 sm:py-2.5 sm:pr-10 sm:pl-20"
                 />
                 <button
                   type="submit"
                   disabled={newsletterStatus === "loading"}
                   aria-label="ارسال"
-                  className="absolute left-2 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-md bg-[#E7E6F7] px-3 py-1.5 text-xs font-medium text-[#12203f] transition hover:brightness-105 disabled:opacity-60"
+                  className="absolute left-2 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-md bg-[#E7E6F7] px-2.5 py-1 text-[10px] font-medium text-[#12203f] transition hover:brightness-105 disabled:opacity-60 sm:px-3 sm:py-1.5 sm:text-xs"
                 >
                   ارسال
                 </button>
@@ -286,11 +264,12 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col-reverse items-center justify-between gap-4 border-t border-white/10 pt-6 sm:flex-row">
-          <p className="text-center text-xs text-white/70 sm:text-right">
+        {/* Footer Bottom Bar */}
+        <div className="mt-6 flex flex-col-reverse items-center justify-between gap-4 border-t border-white/10 pt-5 sm:mt-8 sm:flex-row sm:pt-6">
+          <p className="text-center text-[10px] text-white/70 sm:text-right sm:text-xs">
             تمامی حقوق مادی و معنوی این وبسایت برای موسسه منادیان فتح ایرانیان محفوظ می‌باشد.
           </p>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <SocialIcon label="اینستاگرام">
               <InstagramIcon />
             </SocialIcon>
@@ -344,7 +323,7 @@ function Ribbon({
         {TRACK_SEGMENTS.map((_, i) => (
           <span
             key={i}
-            className="relative z-10 flex flex-shrink-0 items-center justify-center text-xs font-bold text-white sm:text-sm"
+            className="relative z-10 flex flex-shrink-0 items-center justify-center text-[10px] font-bold text-white sm:text-xs lg:text-sm"
             style={{ width: ITEM_WIDTH }}
           >
             منادیان فتح ایرانیان
@@ -355,6 +334,7 @@ function Ribbon({
   );
 }
 
+// Icons remain the same...
 function PhoneIcon() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -389,7 +369,7 @@ function SocialIcon({
     <a
       href="#"
       aria-label={label}
-      className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+      className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20 hover:scale-105 sm:h-9 sm:w-9"
     >
       {children}
     </a>
@@ -398,7 +378,7 @@ function SocialIcon({
 
 function InstagramIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" strokeWidth="1.6" />
       <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.6" />
       <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" />
@@ -408,7 +388,7 @@ function InstagramIcon() {
 
 function TelegramIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M21 4L2.5 11.4c-.9.35-.9 1.6.02 1.92l4.63 1.6 1.78 5.53c.24.75 1.2.95 1.73.37l2.5-2.7 4.68 3.43c.7.51 1.7.13 1.88-.72L23.9 4.9c.2-.9-.7-1.6-1.5-1.9z"
         stroke="currentColor"
@@ -422,7 +402,7 @@ function TelegramIcon() {
 
 function WhatsappIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.7-1.2A9 9 0 1 0 12 3z"
         stroke="currentColor"
@@ -438,7 +418,7 @@ function WhatsappIcon() {
 
 function YoutubeIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="2.5" y="6" width="19" height="12" rx="3" stroke="currentColor" strokeWidth="1.4" />
       <path d="M10.5 9.5l5 2.5-5 2.5v-5z" fill="currentColor" />
     </svg>
