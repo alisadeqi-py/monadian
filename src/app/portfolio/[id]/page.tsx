@@ -265,32 +265,34 @@ function AparatSlide({ item }: { item: PortfolioItem }) {
         پیش نمایش
       </span>
 
-      {/* Grid container */}
-      <div className="grid h-full w-full place-items-center">
-        <div className="relative col-start-1 row-start-1 h-full w-full overflow-hidden">
+      {/* Grid container for perfect centering */}
+      <div className="grid h-full w-full place-items-center overflow-hidden">
+        <div className="relative col-start-1 row-start-1 flex h-full w-full items-center justify-center overflow-hidden">
           <iframe
             src={item.aparat_src}
             allowFullScreen
-            className={`
-              absolute border-0
-              // Center using transform
-              left-1/2 top-1/2
-              -translate-x-1/2 -translate-y-1/2
-              // Responsive sizing
-              min-h-[100%] min-w-[100%]
-              w-auto h-auto
-              sm:h-[56.25vw] sm:min-h-full
-              sm:w-[177.78vh] sm:min-w-full
-            `}
+            className="absolute border-0"
             style={{
+              // Perfect centering with transform
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              // Cover the screen while maintaining aspect ratio
+              width: 'auto',
+              height: 'auto',
+              minWidth: '100%',
+              minHeight: '100%',
               maxWidth: 'none',
               maxHeight: 'none',
+              // Responsive adjustments
+              objectFit: 'cover',
             }}
           />
         </div>
       </div>
 
-      {/* Mobile overlay */}
+      {/* Gradient overlay for better control visibility */}
       <div className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t from-black/40 to-transparent pointer-events-none sm:hidden" />
     </section>
   );
@@ -303,7 +305,7 @@ function GallerySlide({ item }: { item: PortfolioItem }) {
       dir="rtl"
       className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-x-hidden overflow-y-auto px-4 py-12 sm:px-6 sm:py-16"
       style={{
-        backgroundImage: "url(/assets/portfolio-slide-bg.png)",
+        backgroundImage: "url(/assets/banner.webp)",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
@@ -337,7 +339,7 @@ function OtherProjectsSlide({ items }: { items: PortfolioItem[] }) {
       dir="rtl"
       className="relative flex min-h-screen w-full flex-col items-center justify-center px-4 py-12 sm:px-6 sm:py-16"
       style={{
-        backgroundImage: "url(/assets/portfolio-slide-bg.png)",
+        backgroundImage: "url(/assets/banner.webp)",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
