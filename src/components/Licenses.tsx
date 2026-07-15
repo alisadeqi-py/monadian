@@ -44,19 +44,19 @@ export default function Licenses() {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:gap-8">
           {CARDS.map((c, i) => (
             <div key={i} className="flex w-full flex-col gap-4 text-center sm:items-start items-center">
-              <div className="w-40 h-20 flex sm:mb-4 mb-6">
+              <div className="w-44 h-28 flex sm:mb-4 mb-6">
                 <Image
                   src={c.icon}
                   alt=""
-                  width={112}
-                  height={112}
+                  width={160}
+                  height={160}
                   className="w-max h-max ml-auto"
                 />
               </div>
               <div className="flex">
                 <p className="font-bold text-[#12203f] sm:text-lg">{c.title}</p>
               </div>
-              <div className="relative group isolate flex w-full gap-2 rounded-full px-7 py-3.5">
+              <div className="relative group isolate flex w-full gap-2 rounded-full px-5 py-2">
                 <span
                   aria-hidden="true"
                   className="pointer-events-none absolute inset-0 -z-10 rounded-full bg-[url('/assets/license-pill-normal.png')] bg-[length:100%_100%] bg-no-repeat opacity-100 transition-opacity duration-300 group-hover:opacity-0"
@@ -66,9 +66,9 @@ export default function Licenses() {
                   className="pointer-events-none absolute inset-0 -z-10 rounded-full bg-[url('/assets/license-pill-hover.png')] bg-[length:100%_100%] bg-no-repeat opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                 />
 
-                <span className="flex w-full justify-between gap-2 text-sm font-semibold text-[#12203f]/60 transition-colors duration-300 group-hover:text-[#12203f] sm:text-base md:whitespace-nowrap">
+                <span className="flex w-full justify-between gap-2 text-xs font-semibold text-[#12203f] sm:text-sm sm:text-[#12203f]/60 sm:transition-colors sm:duration-300 sm:group-hover:text-[#12203f] md:whitespace-nowrap">
                   <span className="flex">
-                    <CornerIcon width={20} height={20} />
+                    <CornerIcon width={16} height={16} />
                     {c.ministry}
                   </span>
                 </span>
