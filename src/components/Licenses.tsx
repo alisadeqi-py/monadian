@@ -71,15 +71,6 @@ export default function Licenses() {
                     <CornerIcon width={20} height={20} />
                     {c.ministry}
                   </span>
-                  <span className="w-5 h-5 hidden md:flex">
-                    <Image
-                      src="/assets/logo-mark.png"
-                      alt=""
-                      width={5}
-                      height={5}
-                      className="h-auto w-auto flex object-cover flex-1"
-                    />
-                  </span>
                 </span>
               </div>
             </div>

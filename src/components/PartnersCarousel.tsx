@@ -100,10 +100,10 @@ function Diamond({ src, title }: { src: string; title?: string }) {
   return (
     <div className="group relative flex flex-col flex-shrink-0 cursor-pointer items-center justify-center transition-all duration-300 ease-out hover:scale-105">
       {/* Logo Container */}
-      <div className="relative flex h-[80px] w-[80px] items-center justify-center p-3 transition-all duration-300 group-hover:bg-white group-hover:shadow-lg sm:h-[100px] sm:w-[100px] sm:p-4 lg:h-[120px] lg:w-[120px]">
+      <div className="relative flex h-[70px] w-[70px] items-center justify-center p-2 transition-all duration-300 sm:h-[90px] sm:w-[90px] sm:p-3 lg:h-[110px] lg:w-[110px] lg:p-4">
         <Image
           src={src}
-          alt=""
+          alt={title || ""}
           width={120}
           height={120}
           loading="eager"
@@ -111,11 +111,10 @@ function Diamond({ src, title }: { src: string; title?: string }) {
         />
       </div>
 
-      {/* Title - Hidden on mobile, shown on hover */}
       {title && (
-        <div className="absolute -bottom-8 left-1/2 w-max -translate-x-1/2 rounded-lg bg-white/95 px-3 py-1 text-center text-xs font-medium text-[#12203f] opacity-0 shadow-lg transition-all duration-300 group-hover:bottom-0 group-hover:opacity-100 sm:-bottom-10 sm:group-hover:bottom-1 lg:text-sm">
+        <p className="mt-2 text-center text-[10px] font-bold shadow-lg bg-white p-2 rounded-md text-black transition-colors duration-300 group-hover:text-[#12203f] sm:text-xs lg:text-sm">
           {title}
-        </div>
+        </p>
       )}
     </div>
   );
