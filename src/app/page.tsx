@@ -9,7 +9,7 @@ import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <main className="relative h-screen w-full overflow-hidden bg-white">
+    <main className="relative h-dvh w-full overflow-hidden bg-white">
       <SlideShow>
         <Slide index={0}>
           <Hero />

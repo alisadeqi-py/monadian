@@ -31,7 +31,7 @@ const SERVICES = [
 ];
 
 export default function Services() {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
     <section className="flex min-h-screen w-full items-center bg-brand-navy py-12 sm:py-16">
