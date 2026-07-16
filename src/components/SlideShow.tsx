@@ -15,6 +15,16 @@ export default function SlideShow({ children }: { children: React.ReactNode }) {
     (index: number, enterFrom: "top" | "bottom") => void
   >(() => {});
 
+  // Cached measurements for the active slide so the hot wheel/touch path
+  // never has to query the DOM or force a synchronous layout read
+  // (scrollHeight/clientHeight/scrollTop) on every single event - that
+  // read-after-write pattern ("layout thrashing") is what causes scroll
+  // jank. maxScroll is measured once when a slide becomes active; scrollPos
+  // is then tracked purely in memory and only ever written to the DOM.
+  const activeSlideElRef = useRef<HTMLElement | null>(null);
+  const maxScrollRef = useRef(0);
+  const scrollPosRef = useRef(0);
+
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -30,6 +40,11 @@ export default function SlideShow({ children }: { children: React.ReactNode }) {
             const index = Number(entry.target.getAttribute("data-slide"));
             activeRef.current = index;
             setActive(index);
+
+            const el = entry.target as HTMLElement;
+            activeSlideElRef.current = el;
+            maxScrollRef.current = el.scrollHeight - el.clientHeight;
+            scrollPosRef.current = el.scrollTop;
           }
         });
       },
@@ -63,10 +78,13 @@ export default function SlideShow({ children }: { children: React.ReactNode }) {
       const target = getSlide(index);
       if (!target) return;
 
-      if (target.scrollHeight > target.clientHeight) {
-        target.scrollTop =
-          enterFrom === "top" ? 0 : target.scrollHeight - target.clientHeight;
+      const targetMax = target.scrollHeight - target.clientHeight;
+      if (targetMax > 0) {
+        target.scrollTop = enterFrom === "top" ? 0 : targetMax;
       }
+      activeSlideElRef.current = target;
+      maxScrollRef.current = targetMax;
+      scrollPosRef.current = target.scrollTop;
 
       isAnimatingRef.current = true;
       activeRef.current = index;
@@ -80,21 +98,33 @@ export default function SlideShow({ children }: { children: React.ReactNode }) {
 
     navigateRef.current = navigate;
 
+    // Coalesce scrollTop writes to at most once per animation frame so a
+    // burst of touchmove/wheel events doesn't trigger a style write (and
+    // the browser's layout/paint work that follows it) more often than the
+    // screen can actually show.
+    let writeScheduled = false;
+    const scheduleScrollWrite = () => {
+      if (writeScheduled) return;
+      writeScheduled = true;
+      requestAnimationFrame(() => {
+        writeScheduled = false;
+        const el = activeSlideElRef.current;
+        if (el) el.scrollTop = scrollPosRef.current;
+      });
+    };
+
     const attemptStep = (direction: 1 | -1, rawDelta: number) => {
-      const current = getSlide(activeRef.current);
+      const current = activeSlideElRef.current;
       if (!current) return;
 
-      const maxScroll = current.scrollHeight - current.clientHeight;
+      const maxScroll = maxScrollRef.current;
+      const pos = scrollPosRef.current;
       const canScrollWithin =
-        direction > 0
-          ? current.scrollTop < maxScroll - 1
-          : current.scrollTop > 1;
+        direction > 0 ? pos < maxScroll - 1 : pos > 1;
 
       if (canScrollWithin) {
-        current.scrollTop = Math.max(
-          0,
-          Math.min(maxScroll, current.scrollTop + rawDelta)
-        );
+        scrollPosRef.current = Math.max(0, Math.min(maxScroll, pos + rawDelta));
+        scheduleScrollWrite();
         return;
       }
 
@@ -114,14 +144,22 @@ export default function SlideShow({ children }: { children: React.ReactNode }) {
     };
 
     // Some slides contain their own horizontally-scrollable content (e.g.
-    // the portfolio carousel). A real finger drag almost never moves on a
-    // single axis, so we can't just look at deltaY: we wait for the touch
-    // to clear a small dead-zone, lock the gesture to whichever axis moved
-    // further, and for a horizontal-locked gesture we do nothing at all for
-    // the rest of it - no preventDefault, no slide logic - so the browser's
-    // native handling of the nested element takes over exactly as if we
-    // weren't here.
-    const AXIS_LOCK_THRESHOLD = 10;
+    // the portfolio carousel), which has no touch handling of its own - it
+    // relies on the browser's native horizontal pan. So we can't just look
+    // at deltaY: the very first touchmove of a gesture decides whether it's
+    // horizontal (hand off to native handling for the rest of the gesture,
+    // no preventDefault at all) or vertical (ours to drive).
+    //
+    // That decision has to happen on literally the first touchmove sample,
+    // not after a multi-event "dead zone": browsers finalize whether a
+    // touch sequence is a native scroll based on whether its FIRST touchmove
+    // event was prevented. Skip preventDefault on even one early event while
+    // "waiting to see more movement" and the browser commits to natively
+    // scrolling the outer container - every later preventDefault() call in
+    // that gesture is then silently ignored (cancelable=false), so our
+    // JS-driven slide scroll ends up fighting the browser's own native
+    // scroll for the same gesture, which is exactly the glitchy motion this
+    // is meant to avoid.
     let touchStart: { x: number; y: number } | null = null;
     let touchLastY = 0;
     let gestureAxis: "vertical" | "horizontal" | null = null;
@@ -149,22 +187,17 @@ export default function SlideShow({ children }: { children: React.ReactNode }) {
       if (gestureAxis === null) {
         const dx = t.clientX - touchStart.x;
         const dy = t.clientY - touchStart.y;
-        if (Math.abs(dx) < AXIS_LOCK_THRESHOLD && Math.abs(dy) < AXIS_LOCK_THRESHOLD) {
-          return;
-        }
+        if (dx === 0 && dy === 0) return; // no movement yet to judge by
         gestureAxis = Math.abs(dx) > Math.abs(dy) ? "horizontal" : "vertical";
-        touchLastY = t.clientY;
       }
 
       if (gestureAxis === "horizontal") return;
 
+      event.preventDefault();
       const currentY = t.clientY;
       const delta = touchLastY - currentY;
-      if (delta === 0) return;
-
-      event.preventDefault();
       touchLastY = currentY;
-      if (isAnimatingRef.current) return;
+      if (delta === 0 || isAnimatingRef.current) return;
       attemptStep(delta > 0 ? 1 : -1, delta);
     };
 

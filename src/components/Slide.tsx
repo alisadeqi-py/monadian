@@ -6,7 +6,11 @@ export default function Slide({
   children: React.ReactNode;
 }) {
   return (
-    <div data-slide={index} className="h-dvh w-full snap-start overflow-y-auto">
+    <div
+      data-slide={index}
+      className="h-dvh w-full snap-start overflow-y-auto"
+      style={{ scrollSnapStop: "always" }}
+    >
       {children}
     </div>
   );
