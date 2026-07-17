@@ -66,7 +66,7 @@ export default function Licenses() {
                   className="pointer-events-none absolute inset-0 -z-10 rounded-full bg-[url('/assets/license-pill-hover.png')] bg-[length:100%_100%] bg-no-repeat opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                 />
 
-                <span className="flex w-full justify-between gap-2 text-sm font-semibold text-[#12203f] sm:text-base sm:text-[#12203f]/60 sm:transition-colors sm:duration-300 sm:group-hover:text-[#12203f] md:whitespace-nowrap">
+                <span className="flex w-full justify-center sm:justify-between gap-2 text-sm font-semibold text-[#12203f] sm:text-base sm:text-[#12203f]/60 sm:transition-colors sm:duration-300 sm:group-hover:text-[#12203f] md:whitespace-nowrap">
                   <span className="flex">
                     <CornerIcon width={16} height={16} />
                     {c.ministry}
