@@ -13,7 +13,7 @@ export default function SlideShow({ children }: { children: React.ReactNode }) {
   const isAnimatingRef = useRef(false);
   const navigateRef = useRef<
     (index: number, enterFrom: "top" | "bottom") => void
-  >(() => {});
+  >(() => { });
 
   // Cached measurements for the active slide so the hot wheel/touch path
   // never has to query the DOM or force a synchronous layout read
@@ -217,6 +217,60 @@ export default function SlideShow({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
+  // KEYBOARD NAVIGATION
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Don't interfere with typing in inputs/textarea
+      if (
+        event.target instanceof HTMLInputElement ||
+        event.target instanceof HTMLTextAreaElement ||
+        event.target instanceof HTMLSelectElement
+      ) {
+        return;
+      }
+
+      const slideCount = containerRef.current?.querySelectorAll("[data-slide]").length || 0;
+
+      // Navigate to next slide
+      if (event.key === "ArrowDown" || event.key === "ArrowRight") {
+        event.preventDefault();
+        const nextIndex = Math.min(activeRef.current + 1, slideCount - 1);
+        if (nextIndex !== activeRef.current) {
+          navigateRef.current(nextIndex, "top");
+        }
+      }
+      // Navigate to previous slide
+      else if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
+        event.preventDefault();
+        const prevIndex = Math.max(activeRef.current - 1, 0);
+        if (prevIndex !== activeRef.current) {
+          navigateRef.current(prevIndex, "bottom");
+        }
+      }
+      // Go to first slide
+      else if (event.key === "Home") {
+        event.preventDefault();
+        if (activeRef.current !== 0) {
+          navigateRef.current(0, "top");
+        }
+      }
+      // Go to last slide
+      else if (event.key === "End") {
+        event.preventDefault();
+        const lastIndex = slideCount - 1;
+        if (activeRef.current !== lastIndex) {
+          navigateRef.current(lastIndex, "top");
+        }
+      }
+    };
+
+    // Add keyboard listener
+    window.addEventListener("keydown", handleKeyDown);
+
+    // Cleanup
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   const goToSlide = (index: number) => {
     navigateRef.current(index, "top");
   };
@@ -227,9 +281,30 @@ export default function SlideShow({ children }: { children: React.ReactNode }) {
       <div
         ref={containerRef}
         className="h-dvh w-full snap-y snap-mandatory overflow-y-scroll scroll-smooth"
+        tabIndex={0}
+        role="region"
+        aria-label="Slideshow navigation"
       >
         {children}
       </div>
     </>
+  );
+}
+
+export function Slide({
+  index,
+  children,
+}: {
+  index: number;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      data-slide={index}
+      className="h-dvh w-full snap-start overflow-y-auto"
+      style={{ scrollSnapStop: "always" }}
+    >
+      {children}
+    </div>
   );
 }
