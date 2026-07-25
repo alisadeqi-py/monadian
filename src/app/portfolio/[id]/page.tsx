@@ -265,39 +265,23 @@ function AparatSlide({ item }: { item: PortfolioItem }) {
         پیش نمایش
       </span>
 
-      {/* Grid container for perfect centering */}
-      <div className="grid h-full w-full place-items-center overflow-hidden">
-        <div className="relative col-start-1 row-start-1 flex h-full w-full items-center justify-center overflow-hidden">
+      <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+        <div className="relative w-full h-0" style={{ paddingBottom: '56.25%' }}> {/* 16:9 aspect ratio */}
           <iframe
             src={item.aparat_src}
             allowFullScreen
-            className="absolute border-0"
+            className="absolute top-0 left-0 w-full h-full border-0"
             style={{
-              // Perfect centering with transform
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              // Cover the screen while maintaining aspect ratio
-              width: 'auto',
-              height: 'auto',
-              minWidth: '100%',
-              minHeight: '100%',
-              maxWidth: 'none',
-              maxHeight: 'none',
-              // Responsive adjustments
               objectFit: 'cover',
             }}
           />
         </div>
       </div>
 
-      {/* Gradient overlay for better control visibility */}
       <div className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t from-black/40 to-transparent pointer-events-none sm:hidden" />
     </section>
   );
 }
-
 
 function GallerySlide({ item }: { item: PortfolioItem }) {
   return (
