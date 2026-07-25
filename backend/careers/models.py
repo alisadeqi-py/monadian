@@ -38,9 +38,7 @@ class CareerApplication(models.Model):
         blank=True,
         null=True,
     )
-    photo = models.ImageField(
-        "عکس", upload_to=photo_upload_path, blank=True, null=True
-    )
+    photo = models.ImageField("عکس", upload_to=photo_upload_path)
     is_reviewed = models.BooleanField("بررسی شده", default=False)
     created_at = models.DateTimeField("تاریخ ثبت", auto_now_add=True)
 
