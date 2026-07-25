@@ -30,6 +30,7 @@ urlpatterns = [
     path("api/holdings/", include("holdings.urls")),
     path("api/portfolio/", include("portfolio.urls")),
     path("api/newsletter/", include("newsletter.urls")),
+    path("api/careers/", include("careers.urls")),
 ]
 
 # Served unconditionally (not just in DEBUG) because this deploys as a

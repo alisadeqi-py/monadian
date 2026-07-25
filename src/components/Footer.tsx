@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
-import { API_PUBLIC_URL } from "@/lib/api";
 import EnvelopIcon from "./EnvelopIcon";
 
 const ITEM_WIDTH = 160;
@@ -51,7 +51,7 @@ export default function Footer() {
     e.preventDefault();
     setStatus("loading");
     try {
-      const res = await fetch(`${API_PUBLIC_URL}/api/contact/`, {
+      const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ full_name: fullName, phone_number: phoneNumber, message }),
@@ -70,7 +70,7 @@ export default function Footer() {
     e.preventDefault();
     setNewsletterStatus("loading");
     try {
-      const res = await fetch(`${API_PUBLIC_URL}/api/newsletter/`, {
+      const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: newsletterEmail }),
@@ -262,6 +262,24 @@ export default function Footer() {
               <p className="text-xs font-bold text-red-400">خطا در ثبت، دوباره تلاش کنید</p>
             )}
           </div>
+        </div>
+
+        {/* Careers CTA */}
+        <div className="mt-8 flex flex-col items-center justify-between gap-4 rounded-2xl bg-white/5 px-5 py-5 text-center ring-1 ring-white/10 sm:mt-10 sm:flex-row sm:px-8 sm:text-right">
+          <div>
+            <h3 className="text-sm font-bold text-white sm:text-base">
+              به تیم ما بپیوندید
+            </h3>
+            <p className="mt-1 text-xs text-white/60 sm:text-sm">
+              اگر علاقه‌مند به همکاری با موسسه منادیان فتح ایرانیان هستید، فرم همکاری را تکمیل کنید.
+            </p>
+          </div>
+          <Link
+            href="/careers"
+            className="whitespace-nowrap rounded-full bg-brand-yellow px-6 py-2.5 text-sm font-extrabold text-[#12203f] shadow-lg transition hover:brightness-105 sm:px-8 sm:py-3"
+          >
+            همکاری با ما
+          </Link>
         </div>
 
         {/* Footer Bottom Bar */}

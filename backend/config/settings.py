@@ -48,7 +48,7 @@ DEBUG = env.bool("DJANGO_DEBUG", default=False)
 # environment/`.env` still overrides this when present.
 ALLOWED_HOSTS = env.list(
     "DJANGO_ALLOWED_HOSTS",
-    default=["localhost", "127.0.0.1", "monadian3.runflare.run"],
+    default=["localhost", "127.0.0.1", "monadian3.runflare.run", "backend.monadianfath.com"],
 )
 
 
@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     "holdings",
     "portfolio",
     "newsletter",
+    "careers",
 ]
 
 MIDDLEWARE = [
@@ -93,12 +94,18 @@ CORS_ALLOWED_ORIGINS = env.list(
         "http://localhost:3000",
         "http://127.0.0.1:3000",
         "https://monadian2.runflare.run",
+        "https://monadianfath.com",
     ],
 )
 
 CSRF_TRUSTED_ORIGINS = env.list(
     "CSRF_TRUSTED_ORIGINS",
-    default=["https://monadian2.runflare.run", "https://monadian3.runflare.run"],
+    default=[
+        "https://monadian2.runflare.run",
+        "https://monadian3.runflare.run",
+        "https://monadianfath.com",
+        "https://backend.monadianfath.com",
+    ],
 )
 
 ROOT_URLCONF = "config.urls"
@@ -131,7 +138,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     "default": env.db(
         "DATABASE_URL",
-        default="postgresql://postgres:dC6Qa5AfUnDnJzwKrw4h@monadiandb-csm-service:5432/monadianznb_db",
+        default="postgresql://postgres:kCa4r4SoHnPy3PcKhFyr@monadian-db-psi-service:5432/monadianeci_db",
     )
 }
 
@@ -191,7 +198,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 50,
     # Scope used by the public contact-form endpoint to prevent spam/abuse.
-    "DEFAULT_THROTTLE_RATES": {"contact": "5/hour", "newsletter": "10/hour"},
+    "DEFAULT_THROTTLE_RATES": {"contact": "5/hour", "newsletter": "10/hour", "careers": "5/hour"},
 }
 
 # Production hardening. TLS is terminated at the platform's edge proxy, not
@@ -204,13 +211,17 @@ REST_FRAMEWORK = {
 if not DEBUG:
     SECURE_SSL_REDIRECT = env.bool("SECURE_SSL_REDIRECT", default=False)
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
+    # The admin panel (the only thing here using session/CSRF cookies) is
+    # served over plain HTTP on its current domain, with no HTTPS need for
+    # it - a "Secure" cookie would be silently dropped by the browser on an
+    # HTTP connection, breaking admin login with "CSRF cookie not set."
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = "DENY"
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
+    # No HSTS: it would make browsers refuse plain HTTP for this domain (and
+    # all subdomains) for a year after a single successful HTTPS hit, which
+    # actively works against not needing SSL here.
     # Drop the browsable API HTML renderer in production; JSON only.
     REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"] = ["rest_framework.renderers.JSONRenderer"]
 
