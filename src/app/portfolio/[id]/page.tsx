@@ -355,7 +355,7 @@ function OtherProjectsSlide({ items }: { items: PortfolioItem[] }) {
             <Link
               key={p.id}
               href={`/portfolio/${p.id}`}
-              className="group relative flex h-[200px] w-full flex-col justify-end overflow-hidden rounded-2xl bg-brand-card ring-1 ring-black/5 transition active:scale-[0.98] hover:ring-brand-yellow/60 sm:h-[260px]"
+              className="group relative flex h-[200px] w-full flex-col justify-end overflow-hidden rounded-2xl bg-brand-card ring-1 ring-black/5 transition active:scale-[0.98] hover:ring-brand-yellow/60 sm:h-[360px]"
             >
               {p.image && (
                 <div
