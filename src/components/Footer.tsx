@@ -197,7 +197,7 @@ export default function Footer() {
             </p>
             <p className="text-xs text-white/90 sm:text-sm">
               <span className="ml-2 text-white/40">•</span>
-              <span className="text-white/70">ساعت کاری</span> شنبه تا چهارشنبه ۸ تا ۱۷
+              <span className="text-white/70">ساعت کاری</span> شنبه تا پنج شنبه ۸ تا ۱۷
             </p>
             <p className="flex items-center justify-start gap-2 text-xs text-white/90 sm:text-sm">
               <PhoneIcon />
