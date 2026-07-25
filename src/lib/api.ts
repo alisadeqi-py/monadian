@@ -58,7 +58,7 @@ function toPublicUrl(url: string | null): string | null {
 export async function getHoldingCompanies(): Promise<HoldingCompany[]> {
   try {
     const res = await fetch(`${API_INTERNAL_URL}/api/holdings/`, {
-      cache: "no-store",
+      next: { revalidate: 60 },
     });
     if (!res.ok) {
       console.error(`getHoldingCompanies: ${API_INTERNAL_URL}/api/holdings/ responded ${res.status}`);
@@ -87,7 +87,7 @@ function normalizePortfolioItem(item: PortfolioItem): PortfolioItem {
 export async function getPortfolioItems(): Promise<PortfolioItem[]> {
   try {
     const res = await fetch(`${API_INTERNAL_URL}/api/portfolio/`, {
-      cache: "no-store",
+      next: { revalidate: 60 },
     });
     if (!res.ok) {
       console.error(`getPortfolioItems: ${API_INTERNAL_URL}/api/portfolio/ responded ${res.status}`);
@@ -104,7 +104,7 @@ export async function getPortfolioItems(): Promise<PortfolioItem[]> {
 export async function getPortfolioItem(id: number): Promise<PortfolioItem | null> {
   try {
     const res = await fetch(`${API_INTERNAL_URL}/api/portfolio/${id}/`, {
-      cache: "no-store",
+      next: { revalidate: 60 },
     });
     if (!res.ok) {
       console.error(`getPortfolioItem: ${API_INTERNAL_URL}/api/portfolio/${id}/ responded ${res.status}`);

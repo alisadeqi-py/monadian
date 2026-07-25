@@ -6,6 +6,28 @@ import DecorativeSidebar from "./DecorativeSidebar";
 // Fallback used only if the browser doesn't support the `scrollend` event.
 const TRANSITION_FALLBACK_MS = 700;
 
+// Trackpads (and some mice) keep emitting weaker "momentum" wheel events
+// for a while after the user's fingers actually lift - on a strong flick
+// this tail can run well past a second. A fixed cooldown after a
+// transition can't reliably outlast every possible tail length, so instead
+// the lock is released on a rolling quiet window: every wheel/touch event
+// seen while it's held re-arms this timer, and it only actually clears
+// once there's been a real gap with no input - genuine evidence the
+// gesture has ended - rather than just a fixed amount of elapsed time.
+const WHEEL_QUIET_MS = 350;
+
+// A pure quiet-window can still get fooled: real trackpad momentum doesn't
+// decay at a perfectly steady rate, so the gap between two events *within
+// the same physical gesture* occasionally exceeds the quiet window anyway
+// (especially near the tail end, as events get sparser as well as
+// smaller). This floor guarantees the lock is held for at least this long
+// from the moment a transition starts, regardless of input, so a
+// momentarily-long gap can't release it early - at the cost of briefly
+// ignoring a genuinely new gesture if the user scrolls again very fast
+// right after one transition, which is a far less jarring trade-off than
+// skipping a slide.
+const MIN_LOCK_MS = 900;
+
 export default function SlideShow({ children }: { children: React.ReactNode }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
@@ -69,12 +91,47 @@ export default function SlideShow({ children }: { children: React.ReactNode }) {
       container.querySelector<HTMLElement>(`[data-slide="${index}"]`);
     const slideCount = container.querySelectorAll("[data-slide]").length;
 
-    const finishTransition = () => {
-      isAnimatingRef.current = false;
+    let fallbackTimeoutId: number | undefined;
+    let quietTimeoutId: number | undefined;
+    // Becomes true once the visual scrollIntoView transition itself has
+    // settled (via `scrollend` or the fallback timer) - only from that
+    // point on does further wheel/touch input start (re-)arming the quiet
+    // window. Before that, input is simply ignored, same as always.
+    let animationSettled = false;
+    let lockStartedAt = 0;
+
+    const clearTimers = () => {
+      if (fallbackTimeoutId !== undefined) window.clearTimeout(fallbackTimeoutId);
+      if (quietTimeoutId !== undefined) window.clearTimeout(quietTimeoutId);
+    };
+
+    const armQuietRelease = () => {
+      if (quietTimeoutId !== undefined) window.clearTimeout(quietTimeoutId);
+      const remainingFloor = MIN_LOCK_MS - (Date.now() - lockStartedAt);
+      const waitMs = Math.max(WHEEL_QUIET_MS, remainingFloor);
+      quietTimeoutId = window.setTimeout(() => {
+        isAnimatingRef.current = false;
+        animationSettled = false;
+      }, waitMs);
+    };
+
+    const onAnimationSettled = () => {
+      if (fallbackTimeoutId !== undefined) window.clearTimeout(fallbackTimeoutId);
+      animationSettled = true;
+      armQuietRelease();
     };
 
     const navigate = (index: number, enterFrom: "top" | "bottom") => {
-      if (index < 0 || index >= slideCount || isAnimatingRef.current) return;
+      // Only block a new transition while the previous one's scroll
+      // animation is actually still in flight. Once it has visually
+      // settled, `isAnimatingRef` staying true is purely the wheel/touch
+      // momentum-filtering grace period (see noteInputWhileLocked below) -
+      // that filtering is specific to ambiguous, continuous wheel/touch
+      // input and has no bearing on an explicit, unambiguous action like a
+      // sidebar dot click or a keyboard press, so those should never be
+      // silently swallowed by it.
+      if (index < 0 || index >= slideCount) return;
+      if (isAnimatingRef.current && !animationSettled) return;
       const target = getSlide(index);
       if (!target) return;
 
@@ -87,13 +144,50 @@ export default function SlideShow({ children }: { children: React.ReactNode }) {
       scrollPosRef.current = target.scrollTop;
 
       isAnimatingRef.current = true;
+      animationSettled = false;
+      lockStartedAt = Date.now();
       activeRef.current = index;
       setActive(index);
-      container.addEventListener("scrollend", finishTransition, {
+      clearTimers();
+      container.addEventListener("scrollend", onAnimationSettled, {
         once: true,
       });
-      window.setTimeout(finishTransition, TRANSITION_FALLBACK_MS);
+      fallbackTimeoutId = window.setTimeout(onAnimationSettled, TRANSITION_FALLBACK_MS);
       target.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+
+    // Real trackpad momentum decays in magnitude from one event to the
+    // next; a genuinely new, deliberate swipe almost always starts
+    // noticeably STRONGER than wherever the previous gesture's tail had
+    // already decayed to. So on top of the timing floor/window above, an
+    // event that's clearly bigger than the last one accepted is treated as
+    // a fresh gesture and let through immediately (rather than swallowed
+    // as more of the same tail) - the timing heuristics alone occasionally
+    // misjudge an irregular tail, but a sudden jump back up in strength is
+    // a much more direct signal that this is a new gesture.
+    const MOMENTUM_SLACK = 1.4;
+    let lastAbsDelta = 0;
+
+    // Called from onWheel/onTouchMove whenever input arrives while the
+    // lock is held. Returns true if this event should be treated as the
+    // start of a brand new gesture (lock released, caller should proceed
+    // to act on it); false if it was absorbed as (probably) more of the
+    // same gesture's momentum tail, extending the quiet window so it
+    // keeps postponing release for as long as that tail keeps firing,
+    // however long that takes.
+    const noteInputWhileLocked = (absDelta: number): boolean => {
+      if (!animationSettled) return false; // mid visual-transition, never release early
+
+      if (absDelta > lastAbsDelta * MOMENTUM_SLACK + 1) {
+        isAnimatingRef.current = false;
+        animationSettled = false;
+        if (quietTimeoutId !== undefined) window.clearTimeout(quietTimeoutId);
+        return true;
+      }
+
+      lastAbsDelta = absDelta;
+      armQuietRelease();
+      return false;
     };
 
     navigateRef.current = navigate;
@@ -128,6 +222,7 @@ export default function SlideShow({ children }: { children: React.ReactNode }) {
         return;
       }
 
+      lastAbsDelta = Math.abs(rawDelta);
       navigate(activeRef.current + direction, direction > 0 ? "top" : "bottom");
     };
 
@@ -139,7 +234,9 @@ export default function SlideShow({ children }: { children: React.ReactNode }) {
       if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
       if (event.deltaY === 0) return;
       event.preventDefault();
-      if (isAnimatingRef.current) return;
+      if (isAnimatingRef.current && !noteInputWhileLocked(Math.abs(event.deltaY))) {
+        return;
+      }
       attemptStep(event.deltaY > 0 ? 1 : -1, event.deltaY);
     };
 
@@ -197,7 +294,10 @@ export default function SlideShow({ children }: { children: React.ReactNode }) {
       const currentY = t.clientY;
       const delta = touchLastY - currentY;
       touchLastY = currentY;
-      if (delta === 0 || isAnimatingRef.current) return;
+      if (delta === 0) return;
+      if (isAnimatingRef.current && !noteInputWhileLocked(Math.abs(delta))) {
+        return;
+      }
       attemptStep(delta > 0 ? 1 : -1, delta);
     };
 
@@ -213,7 +313,8 @@ export default function SlideShow({ children }: { children: React.ReactNode }) {
       container.removeEventListener("touchmove", onTouchMove);
       container.removeEventListener("touchend", resetTouch);
       container.removeEventListener("touchcancel", resetTouch);
-      container.removeEventListener("scrollend", finishTransition);
+      container.removeEventListener("scrollend", onAnimationSettled);
+      clearTimers();
     };
   }, []);
 
