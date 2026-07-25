@@ -85,7 +85,7 @@ export default function Licenses() {
               <span className="flex items-center gap-2">
                 <CornerIcon width={16} height={16} />
                 <span className="flex items-center gap-2">
-                  برندهایی که افتخار همکاری داشتیم
+                  تجربه های همکاری ما
                 </span>
               </span>
               <span className="text-sm font-medium text-gray-400 sm:text-base">
