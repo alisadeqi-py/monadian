@@ -13,7 +13,7 @@ export default function DecorativeSidebar({
 }) {
   return (
     <div className="fixed inset-y-0 left-3 z-30 hidden flex-col items-center justify-center gap-4 sm:left-6 sm:flex md:left-10">
-      <button
+      {/* <button
         type="button"
         onClick={() => onNavigate(0)}
         aria-label="بازگشت به ابتدای صفحه"
@@ -26,7 +26,7 @@ export default function DecorativeSidebar({
           height={1775}
           className="h-8 w-8 object-contain sm:h-9 sm:w-9"
         />
-      </button>
+      </button> */}
 
       <div className="flex flex-col gap-4">
         {Array.from({ length: SLIDE_COUNT }).map((_, i) => {
