@@ -1,4 +1,13 @@
+from django.core.validators import FileExtensionValidator
 from django.db import models
+
+
+def resume_upload_path(instance, filename):
+    return f"careers/resumes/{filename}"
+
+
+def photo_upload_path(instance, filename):
+    return f"careers/photos/{filename}"
 
 
 class CareerApplication(models.Model):
@@ -12,12 +21,26 @@ class CareerApplication(models.Model):
     age = models.PositiveSmallIntegerField("سن")
     phone_number = models.CharField("شماره تلفن", max_length=20)
     messengers = models.JSONField("پیام‌رسان‌های فعال", default=list, blank=True)
-    virtual_contact = models.TextField("شماره تماس مجازی با ذکر نام پیام‌رسان")
+    # Not required - some applicants only have one messenger, or none they
+    # can be reached on virtually, and shouldn't be blocked from applying.
+    virtual_contact = models.TextField(
+        "شماره تماس مجازی با ذکر نام پیام‌رسان", blank=True
+    )
     marital_status = models.CharField(
         "وضعیت تأهل", max_length=10, choices=MARITAL_CHOICES
     )
     education = models.TextField("میزان تحصیلات، رشته و نام دانشگاه")
     desired_roles = models.JSONField("همکاری مد نظر", default=list, blank=True)
+    resume = models.FileField(
+        "رزومه",
+        upload_to=resume_upload_path,
+        validators=[FileExtensionValidator(allowed_extensions=["pdf", "doc", "docx"])],
+        blank=True,
+        null=True,
+    )
+    photo = models.ImageField(
+        "عکس", upload_to=photo_upload_path, blank=True, null=True
+    )
     is_reviewed = models.BooleanField("بررسی شده", default=False)
     created_at = models.DateTimeField("تاریخ ثبت", auto_now_add=True)
 

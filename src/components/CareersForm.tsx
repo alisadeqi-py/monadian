@@ -35,7 +35,6 @@ type Errors = Partial<
     | "age"
     | "phone"
     | "messengers"
-    | "virtualContact"
     | "maritalStatus"
     | "education"
     | "roles",
@@ -67,6 +66,8 @@ export default function CareersForm() {
   const [maritalStatus, setMaritalStatus] = useState("");
   const [education, setEducation] = useState("");
   const [roles, setRoles] = useState<string[]>([]);
+  const [resume, setResume] = useState<File | null>(null);
+  const [photo, setPhoto] = useState<File | null>(null);
 
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<Status>("idle");
@@ -93,7 +94,6 @@ export default function CareersForm() {
       next.phone = "شماره تلفن همراه معتبر وارد کنید (مثال: ۰۹۱۲۳۴۵۶۷۸۹).";
     }
     if (messengers.length === 0) next.messengers = "حداقل یک پیام‌رسان را انتخاب کنید.";
-    if (!virtualContact.trim()) next.virtualContact = "لطفاً شماره تماس مجازی را وارد کنید.";
     if (!maritalStatus) next.maritalStatus = "وضعیت تأهل را انتخاب کنید.";
     if (!education.trim()) next.education = "لطفاً میزان تحصیلات را وارد کنید.";
     if (roles.length === 0) next.roles = "حداقل یک گزینه را انتخاب کنید.";
@@ -108,19 +108,21 @@ export default function CareersForm() {
 
     setStatus("loading");
     try {
+      const formData = new FormData();
+      formData.append("full_name", fullName.trim());
+      formData.append("age", String(Number(normalizeDigits(age))));
+      formData.append("phone_number", normalizeDigits(phone).replace(/[\s-]/g, ""));
+      formData.append("messengers", JSON.stringify(messengers));
+      formData.append("virtual_contact", virtualContact.trim());
+      formData.append("marital_status", maritalStatus);
+      formData.append("education", education.trim());
+      formData.append("desired_roles", JSON.stringify(roles));
+      if (resume) formData.append("resume", resume);
+      if (photo) formData.append("photo", photo);
+
       const res = await fetch("/api/careers", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          full_name: fullName.trim(),
-          age: Number(normalizeDigits(age)),
-          phone_number: normalizeDigits(phone).replace(/[\s-]/g, ""),
-          messengers,
-          virtual_contact: virtualContact.trim(),
-          marital_status: maritalStatus,
-          education: education.trim(),
-          desired_roles: roles,
-        }),
+        body: formData,
       });
       if (!res.ok) throw new Error("request failed");
       setStatus("success");
@@ -222,14 +224,14 @@ export default function CareersForm() {
               </div>
             </Field>
 
-            <Field label="شماره تماس مجازی با ذکر نام پیام‌رسان" required error={errors.virtualContact}>
+            <Field label="شماره تماس مجازی با ذکر نام پیام‌رسان">
               <textarea
                 value={virtualContact}
                 onChange={(e) => setVirtualContact(e.target.value)}
                 placeholder={"تلگرام: 09000000000\nواتساپ: 09120000000"}
                 dir="rtl"
                 rows={2}
-                className={`${inputClass(!!errors.virtualContact)} resize-y`}
+                className={`${inputClass(false)} resize-y`}
               />
             </Field>
 
@@ -242,6 +244,18 @@ export default function CareersForm() {
                 rows={2}
                 className={`${inputClass(!!errors.education)} resize-y`}
               />
+            </Field>
+
+            <Field label="آپلود رزومه">
+              <FileInput
+                file={resume}
+                onChange={setResume}
+                accept=".pdf,.doc,.docx"
+              />
+            </Field>
+
+            <Field label="آپلود عکس">
+              <FileInput file={photo} onChange={setPhoto} accept="image/*" />
             </Field>
 
             <Field className="lg:col-span-2" label="کدام همکاری مد نظر شماست." required error={errors.roles}>
@@ -372,6 +386,47 @@ function ToggleOption({
       </span>
       {label}
     </button>
+  );
+}
+
+function FileInput({
+  file,
+  onChange,
+  accept,
+}: {
+  file: File | null;
+  onChange: (f: File | null) => void;
+  accept: string;
+}) {
+  return (
+    <label className="flex cursor-pointer items-center justify-between gap-3 rounded-[14px] border border-white/15 bg-white/[0.08] px-4 py-3 text-right text-sm font-medium text-white backdrop-blur-[12px] transition-all duration-[250ms] hover:bg-white/[0.12] sm:px-5 sm:py-3.5 sm:text-base">
+      <span className={`truncate ${file ? "text-white" : "text-white/65"}`}>
+        {file ? file.name : "برای انتخاب فایل کلیک کنید"}
+      </span>
+      <span className="flex-shrink-0 text-white/70">
+        <UploadIcon />
+      </span>
+      <input
+        type="file"
+        accept={accept}
+        onChange={(e) => onChange(e.target.files?.[0] ?? null)}
+        className="hidden"
+      />
+    </label>
+  );
+}
+
+function UploadIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M12 15V3m0 0L7 8m5-5l5 5M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
 
