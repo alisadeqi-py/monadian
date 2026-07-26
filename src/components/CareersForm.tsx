@@ -37,7 +37,8 @@ type Errors = Partial<
     | "messengers"
     | "maritalStatus"
     | "education"
-    | "roles",
+    | "roles"
+    | "photo",
     string
   >
 >;
@@ -97,6 +98,7 @@ export default function CareersForm() {
     if (!maritalStatus) next.maritalStatus = "وضعیت تأهل را انتخاب کنید.";
     if (!education.trim()) next.education = "لطفاً میزان تحصیلات را وارد کنید.";
     if (roles.length === 0) next.roles = "حداقل یک گزینه را انتخاب کنید.";
+    if (!photo) next.photo = "لطفاً یک عکس آپلود کنید.";
 
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -254,7 +256,7 @@ export default function CareersForm() {
               />
             </Field>
 
-            <Field label="آپلود عکس">
+            <Field label="آپلود عکس" required error={errors.photo}>
               <FileInput file={photo} onChange={setPhoto} accept="image/*" />
             </Field>
 
