@@ -55,9 +55,9 @@ function DescriptionSlide({ item }: { item: PortfolioItem }) {
       }}
     >
       <div className="mx-auto w-full max-w-7xl">
-        <h2 className="mb-3 text-right text-base font-bold text-[#1B2028] sm:mb-4 sm:text-xl">
+        <h2 className="mb-3 text-right text-base font-bold text-white sm:mb-4 sm:text-xl">
           توضیح کارنامه فنی
-          <span className="font-medium text-gray-500">: شناسنامه کارهای انجام شده</span>
+          <span className="font-medium text-white/60">: شناسنامه کارهای انجام شده</span>
         </h2>
 
         <div

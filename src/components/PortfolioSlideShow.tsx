@@ -58,7 +58,7 @@ export default function PortfolioSlideShow({ children }: { children: React.React
       {count > 1 && (
         <div className="pointer-events-none fixed inset-y-0 left-3 z-40 hidden flex-col items-center justify-center gap-4 sm:left-6 sm:flex md:left-10">
           <div className="pointer-events-auto flex flex-col items-center gap-4">
-            <button
+            {/* <button
               type="button"
               onClick={() => goToSlide(0)}
               aria-label="اسلاید نخست"
@@ -71,7 +71,7 @@ export default function PortfolioSlideShow({ children }: { children: React.React
                 height={1775}
                 className="h-8 w-8 object-contain sm:h-9 sm:w-9"
               />
-            </button>
+            </button> */}
 
             <div className="flex flex-col gap-4">
               {Array.from({ length: count }).map((_, i) => (
