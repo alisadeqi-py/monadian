@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import EnvelopIcon from "./EnvelopIcon";
+import { NETWORK_ERROR, parseApiError } from "@/lib/formError";
 
 const ITEM_WIDTH = 160;
 const SET_COUNT = 20;
@@ -43,25 +44,34 @@ export default function Footer() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [newsletterErrorMessage, setNewsletterErrorMessage] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setStatus("loading");
+    setErrorMessage("");
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ full_name: fullName, phone_number: phoneNumber, message }),
       });
-      if (!res.ok) throw new Error("request failed");
+      if (!res.ok) {
+        const { message: msg } = await parseApiError(res);
+        setErrorMessage(msg);
+        setStatus("error");
+        return;
+      }
       setStatus("success");
       setFullName("");
       setPhoneNumber("");
       setMessage("");
     } catch {
+      setErrorMessage(NETWORK_ERROR);
       setStatus("error");
     }
   }
@@ -69,16 +79,23 @@ export default function Footer() {
   async function handleNewsletterSubmit(e: React.FormEvent) {
     e.preventDefault();
     setNewsletterStatus("loading");
+    setNewsletterErrorMessage("");
     try {
       const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: newsletterEmail }),
       });
-      if (!res.ok) throw new Error("request failed");
+      if (!res.ok) {
+        const { message: msg } = await parseApiError(res);
+        setNewsletterErrorMessage(msg);
+        setNewsletterStatus("error");
+        return;
+      }
       setNewsletterStatus("success");
       setNewsletterEmail("");
     } catch {
+      setNewsletterErrorMessage(NETWORK_ERROR);
       setNewsletterStatus("error");
     }
   }
@@ -147,9 +164,7 @@ export default function Footer() {
             </p>
           )}
           {status === "error" && (
-            <p className="text-center text-sm font-bold text-red-400">
-              خطا در ثبت درخواست، لطفاً دوباره تلاش کنید
-            </p>
+            <p className="text-center text-sm font-bold text-red-400">{errorMessage}</p>
           )}
         </form>
       </div>
@@ -259,7 +274,7 @@ export default function Footer() {
               <p className="text-xs font-bold text-green-400">با موفقیت ثبت شد</p>
             )}
             {newsletterStatus === "error" && (
-              <p className="text-xs font-bold text-red-400">خطا در ثبت، دوباره تلاش کنید</p>
+              <p className="text-xs font-bold text-red-400">{newsletterErrorMessage}</p>
             )}
           </div>
         </div>

@@ -27,6 +27,9 @@ export async function proxyPost(request: NextRequest, backendPath: string) {
       headers: { "Content-Type": res.headers.get("content-type") ?? "application/json" },
     });
   } catch {
-    return NextResponse.json({ detail: "backend unreachable" }, { status: 502 });
+    return NextResponse.json(
+      { detail: "امکان برقراری ارتباط با سرور وجود ندارد. لطفاً بعداً دوباره تلاش کنید." },
+      { status: 502 }
+    );
   }
 }

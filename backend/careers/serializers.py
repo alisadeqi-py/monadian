@@ -22,6 +22,49 @@ class JSONOrEncodedStringField(serializers.JSONField):
 class CareerApplicationSerializer(serializers.ModelSerializer):
     messengers = JSONOrEncodedStringField()
     desired_roles = JSONOrEncodedStringField()
+    full_name = serializers.CharField(
+        max_length=150,
+        error_messages={
+            "required": "لطفاً نام و نام خانوادگی را وارد کنید.",
+            "blank": "لطفاً نام و نام خانوادگی را وارد کنید.",
+        },
+    )
+    age = serializers.IntegerField(
+        min_value=10,
+        max_value=90,
+        error_messages={
+            "required": "سن را به‌صورت عدد صحیح و معتبر وارد کنید.",
+            "invalid": "سن را به‌صورت عدد صحیح و معتبر وارد کنید.",
+            "min_value": "سن وارد شده معتبر نیست.",
+            "max_value": "سن وارد شده معتبر نیست.",
+        },
+    )
+    phone_number = serializers.CharField(
+        max_length=20,
+        error_messages={
+            "required": "شماره تلفن همراه معتبر وارد کنید.",
+            "blank": "شماره تلفن همراه معتبر وارد کنید.",
+        },
+    )
+    marital_status = serializers.ChoiceField(
+        choices=CareerApplication.MARITAL_CHOICES,
+        error_messages={
+            "required": "وضعیت تأهل را انتخاب کنید.",
+            "invalid_choice": "وضعیت تأهل را انتخاب کنید.",
+        },
+    )
+    education = serializers.CharField(
+        error_messages={
+            "required": "لطفاً میزان تحصیلات را وارد کنید.",
+            "blank": "لطفاً میزان تحصیلات را وارد کنید.",
+        },
+    )
+    photo = serializers.ImageField(
+        error_messages={
+            "required": "لطفاً یک عکس آپلود کنید.",
+            "invalid_image": "فایل انتخاب‌شده یک تصویر معتبر نیست.",
+        },
+    )
 
     class Meta:
         model = CareerApplication

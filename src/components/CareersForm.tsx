@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { NETWORK_ERROR, parseApiError } from "@/lib/formError";
 
 const MESSENGERS = ["تلگرام", "اینستاگرام", "بله", "ایتا", "سروش", "واتساپ", "همه موارد"];
 const MARITAL_OPTIONS = ["مجرد", "متأهل", "سایر"];
@@ -38,10 +39,26 @@ type Errors = Partial<
     | "maritalStatus"
     | "education"
     | "roles"
-    | "photo",
+    | "photo"
+    | "resume",
     string
   >
 >;
+
+// Maps the backend's serializer field names to this form's own error keys,
+// so a validation error DRF only catches server-side (e.g. an unsupported
+// resume file extension) still lands under the right field.
+const BACKEND_FIELD_MAP: Record<string, keyof Errors> = {
+  full_name: "fullName",
+  age: "age",
+  phone_number: "phone",
+  messengers: "messengers",
+  marital_status: "maritalStatus",
+  education: "education",
+  desired_roles: "roles",
+  photo: "photo",
+  resume: "resume",
+};
 
 function BackgroundLayer() {
   return (
@@ -72,6 +89,7 @@ export default function CareersForm() {
 
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<Status>("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const toggle = (list: string[], setList: (v: string[]) => void, value: string, max?: number) => {
     setList(
@@ -109,6 +127,7 @@ export default function CareersForm() {
     if (!validate()) return;
 
     setStatus("loading");
+    setErrorMessage("");
     try {
       const formData = new FormData();
       formData.append("full_name", fullName.trim());
@@ -126,9 +145,23 @@ export default function CareersForm() {
         method: "POST",
         body: formData,
       });
-      if (!res.ok) throw new Error("request failed");
+      if (!res.ok) {
+        const { fieldErrors, message } = await parseApiError(res);
+        setErrors((prev) => {
+          const next = { ...prev };
+          for (const [field, msg] of Object.entries(fieldErrors)) {
+            const key = BACKEND_FIELD_MAP[field];
+            if (key) next[key] = msg;
+          }
+          return next;
+        });
+        setErrorMessage(message);
+        setStatus("error");
+        return;
+      }
       setStatus("success");
     } catch {
+      setErrorMessage(NETWORK_ERROR);
       setStatus("error");
     }
   }
@@ -248,7 +281,7 @@ export default function CareersForm() {
               />
             </Field>
 
-            <Field label="آپلود رزومه">
+            <Field label="آپلود رزومه" error={errors.resume}>
               <FileInput
                 file={resume}
                 onChange={setResume}
@@ -276,7 +309,7 @@ export default function CareersForm() {
 
           {status === "error" && (
             <p className="mt-5 rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-center text-sm font-semibold text-red-200">
-              خطایی رخ داد، لطفاً دوباره تلاش کنید.
+              {errorMessage}
             </p>
           )}
 

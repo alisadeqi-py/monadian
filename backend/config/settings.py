@@ -199,6 +199,8 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 50,
     # Scope used by the public contact-form endpoint to prevent spam/abuse.
     "DEFAULT_THROTTLE_RATES": {"contact": "5/hour", "newsletter": "10/hour", "careers": "5/hour"},
+    # Rewrites throttle/500/generic DRF errors to Farsi - see config/exceptions.py.
+    "EXCEPTION_HANDLER": "config.exceptions.custom_exception_handler",
 }
 
 # Production hardening. TLS is terminated at the platform's edge proxy, not

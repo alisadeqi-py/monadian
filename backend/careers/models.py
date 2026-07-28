@@ -34,7 +34,12 @@ class CareerApplication(models.Model):
     resume = models.FileField(
         "رزومه",
         upload_to=resume_upload_path,
-        validators=[FileExtensionValidator(allowed_extensions=["pdf", "doc", "docx"])],
+        validators=[
+            FileExtensionValidator(
+                allowed_extensions=["pdf", "doc", "docx"],
+                message="فرمت رزومه نامعتبر است. لطفاً فایل PDF یا Word (doc, docx) آپلود کنید.",
+            )
+        ],
         blank=True,
         null=True,
     )
