@@ -61,35 +61,23 @@ export default function Services() {
   return (
     <section
       dir="rtl"
-      className="relative min-h-screen w-full overflow-hidden bg-[#030712] py-24 sm:py-32"
+      className="relative min-h-screen w-full overflow-hidden bg-[#030712] py-24"
     >
-      {/* 
-        =======================================================================
-        IMPROVED BACKGROUND & BACKDROP ELEMENTS
-        =======================================================================
-      */}
-      
-      {/* 1. Base Gradient Layer */}
       <div className="absolute inset-0 bg-[radial-gradient(40%_40%_at_50%_50%,#1e293b_0%,#030712_100%)] opacity-80" />
 
-      {/* 2. Interactive Spotlight Follower (Optional: Needs JS to track mouse) */}
-      {/* For now, a static, soft, large central spotlight */}
+
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div className="h-[600px] w-[600px] rounded-full bg-brand-yellow/5 blur-[120px]" />
       </div>
 
-      {/* 3. Subtle Grid Pattern - adds texture and a technical feel */}
       <div className="absolute inset-0 bg-[url(/grid.svg)] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
 
-      {/* 4. Left Side Accent Glow (Refined from original) */}
       <div className="pointer-events-none absolute top-1/2 left-0 h-96 w-96 -translate-y-1/2 rounded-full bg-brand-yellow/10 blur-[140px]" />
       
-      {/* 5. Right Side Complementary Glow */}
       <div className="pointer-events-none absolute top-1/4 right-0 h-96 w-96 -translate-y-1/2 rounded-full bg-blue-500/5 blur-[140px]" />
 
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
         <div className="mb-16 max-w-2xl sm:mb-20">
           <span className="text-xs font-bold uppercase tracking-widest text-brand-yellow sm:text-sm">
             حوزه‌های فعالیت
@@ -99,9 +87,7 @@ export default function Services() {
           </h2>
         </div>
 
-        {/* Layout Grid */}
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-16">
-          {/* Navigation Column (5 Cols) */}
           <div className="flex flex-col space-y-4 lg:col-span-5">
             {SERVICES.map((service) => {
               const isActive = service.id === activeId;
@@ -115,7 +101,6 @@ export default function Services() {
                       : "hover:bg-white/[0.02]"
                   }`}
                 >
-                  {/* Left Accent Bar on Active */}
                   <AnimatePresence>
                     {isActive && (
                       <motion.div
@@ -144,8 +129,6 @@ export default function Services() {
                       {service.title}
                     </span>
                   </div>
-
-                  {/* Icon */}
                   <div
                     className={`flex h-12 w-12 items-center justify-center rounded-xl transition-all ${
                       isActive
@@ -159,8 +142,6 @@ export default function Services() {
               );
             })}
           </div>
-
-          {/* Active Feature Display Card (7 Cols) */}
           <div className="lg:col-span-7">
             <AnimatePresence mode="wait">
               <motion.div
@@ -173,8 +154,6 @@ export default function Services() {
               >
                 {/* Internal Decorative Light */}
                 <div className="pointer-events-none absolute -top-10 -right-10 h-40 w-40 rounded-full bg-brand-yellow/5 blur-[60px]" />
-
-                {/* Top Row: Big Number & Large Icon */}
                 <div>
                   <div className="flex items-center justify-between border-b border-white/5 pb-8">
                     <div className="flex items-center gap-4">
@@ -195,7 +174,6 @@ export default function Services() {
                     </span>
                   </div>
 
-                  {/* Content Area */}
                   <div className="mt-10">
                     <h3 className="text-2xl font-bold text-white sm:text-3xl lg:text-4xl">
                       {activeService.title}
@@ -205,28 +183,10 @@ export default function Services() {
                     </p>
                   </div>
                 </div>
-
-                {/* Bottom Action / Metadata Footer */}
                 <div className="mt-12 flex items-center justify-between border-t border-white/5 pt-8">
                   <span className="text-sm text-white/40">
                     طراحی‌شده برای کسب‌وکارهای پیشرو و نوآور
                   </span>
-                  <button className="inline-flex items-center gap-2.5 rounded-xl bg-brand-yellow px-6 py-3 text-sm font-bold text-brand-navy transition-all hover:bg-white hover:scale-105 active:scale-95 shadow-md">
-                    <span>درخواست مشاوره تخصصی</span>
-                    <svg
-                      className="h-5 w-5 rotate-180"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M14 5l7 7m0 0l-7 7m7-7H3"
-                      />
-                    </svg>
-                  </button>
                 </div>
               </motion.div>
             </AnimatePresence>
@@ -237,7 +197,6 @@ export default function Services() {
   );
 }
 
-// Optimized SVG Icons
 function BrandingIcon({ className = "h-6 w-6" }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className={className}>
