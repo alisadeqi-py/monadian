@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Service {
   id: string;
@@ -13,7 +14,7 @@ interface Service {
 const SERVICES: Service[] = [
   {
     id: "branding",
-    number: "۰۱",
+    number: "۱",
     title: "معماری برند و مهندسیِ نقاط تماس",
     description:
       "ما فراتر از یک نشانِ تجاری، \"شخصیت برند\" شما را در تمامِ نقاطِ تماس با مخاطب بازتعریف می‌کنیم. هدفِ ما، ایجادِ یک ادراکِ یکپارچه و ماندگار در ذهنِ بازارِ هدف است تا برند شما در هر لحظه، روایتگرِ اصالت و اقتدارِ سازمانی شما باشد.",
@@ -21,7 +22,7 @@ const SERVICES: Service[] = [
   },
   {
     id: "digital",
-    number: "۰۲",
+    number: "۲",
     title: "دیجیتال مارکتینگ استراتژیک",
     description:
       "طراحیِ نقشه راهِ حضورِ دیجیتال، فراتر از مدیریتِ شبکه‌های اجتماعی است. ما با ترکیبِ \"استراتژی محتوا\" و \"بهینه‌سازیِ عملکردی\"، زیرساخت‌هایِ آنلاینِ شما را به موتورهایِ رشدِ کسب‌وکار تبدیل می‌کنیم تا در فضایِ رقابتیِ وب، صدایی متمایز و تأثیرگذار داشته باشید.",
@@ -29,7 +30,7 @@ const SERVICES: Service[] = [
   },
   {
     id: "content",
-    number: "۰۳",
+    number: "۳",
     title: "مهندسیِ روایت و تولید چندرسانه‌ای",
     description:
       "محتوا، سوختِ اصلیِ انتقالِ پیامِ شماست. ما با رویکردِ \"داستان‌سراییِ استراتژیک\"، مفاهیمِ پیچیده را به زبانِ تصویر و حرکت ترجمه می‌کنیم. تولیداتِ ما، از استوری‌تلینگِ خلاقانه تا طراحیِ المان‌هایِ بصریِ متحرک، با هدفِ نفوذ در لایه‌هایِ عمیقِ مخاطب و تثبیتِ هویتِ برند طراحی می‌شوند.",
@@ -37,7 +38,7 @@ const SERVICES: Service[] = [
   },
   {
     id: "media",
-    number: "۰۴",
+    number: "۴",
     title: "مدیریت توزیع پیام و جریان‌سازی",
     description:
       "ما نه فقط بسترِ انتشار، که \"مدیریتِ جریانِ دیده شدن\" هستیم. با بهره‌گیری از شبکه‌یِ گسترده‌ای از بسترهایِ مجازی و حقیقی، محتوایِ شما را دقیقاً در برابرِ دیدگانِ مخاطبانِ کلیدی قرار می‌دهیم. مأموریتِ ما، تبدیلِ \"انتشارِ ساده\" به \"جریان‌سازیِ هدفمند\" است.",
@@ -45,7 +46,7 @@ const SERVICES: Service[] = [
   },
   {
     id: "seminar",
-    number: "۰۵",
+    number: "۵",
     title: "مدیریت رویدادهای تخصصی",
     description:
       "هر همایش یا رویداد، یک سکویِ تعاملی برایِ نمایشِ قدرتِ برند است. ما با برنامه‌ریزیِ مهندسی‌شده و طراحیِ تجربه‌هایِ حضوریِ متمایز، پیوندی عمیق میانِ برندِ شما و ذینفعانِ کلیدی ایجاد می‌کنیم. ما در رویدادها، تنها میزبانی نمی‌کنیم؛ بلکه محیطی برایِ شبکه‌سازیِ هوشمندانه خلق می‌کنیم.",
@@ -60,56 +61,84 @@ export default function Services() {
   return (
     <section
       dir="rtl"
-      className="relative min-h-screen w-full overflow-hidden bg-brand-navy py-16 sm:py-24"
+      className="relative min-h-screen w-full overflow-hidden bg-[#030712] py-24 sm:py-32"
     >
-      {/* Background Lighting Accent */}
-      <div className="pointer-events-none absolute top-1/2 left-0 h-96 w-96 -translate-y-1/2 rounded-full bg-brand-yellow/5 blur-[140px]" />
+      {/* 
+        =======================================================================
+        IMPROVED BACKGROUND & BACKDROP ELEMENTS
+        =======================================================================
+      */}
+      
+      {/* 1. Base Gradient Layer */}
+      <div className="absolute inset-0 bg-[radial-gradient(40%_40%_at_50%_50%,#1e293b_0%,#030712_100%)] opacity-80" />
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      {/* 2. Interactive Spotlight Follower (Optional: Needs JS to track mouse) */}
+      {/* For now, a static, soft, large central spotlight */}
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+        <div className="h-[600px] w-[600px] rounded-full bg-brand-yellow/5 blur-[120px]" />
+      </div>
+
+      {/* 3. Subtle Grid Pattern - adds texture and a technical feel */}
+      <div className="absolute inset-0 bg-[url(/grid.svg)] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
+
+      {/* 4. Left Side Accent Glow (Refined from original) */}
+      <div className="pointer-events-none absolute top-1/2 left-0 h-96 w-96 -translate-y-1/2 rounded-full bg-brand-yellow/10 blur-[140px]" />
+      
+      {/* 5. Right Side Complementary Glow */}
+      <div className="pointer-events-none absolute top-1/4 right-0 h-96 w-96 -translate-y-1/2 rounded-full bg-blue-500/5 blur-[140px]" />
+
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="mb-12 max-w-2xl sm:mb-16">
+        <div className="mb-16 max-w-2xl sm:mb-20">
           <span className="text-xs font-bold uppercase tracking-widest text-brand-yellow sm:text-sm">
             حوزه‌های فعالیت
           </span>
-          <h2 className="mt-2 text-3xl font-extrabold text-white sm:text-4xl lg:text-5xl">
-            خدمات راهبردی و توسعه برند
+          <h2 className="mt-3 text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
+            خدمات راهبردی <br/>و توسعه برند
           </h2>
         </div>
 
         {/* Layout Grid */}
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-16">
           {/* Navigation Column (5 Cols) */}
-          <div className="flex flex-col space-y-3 lg:col-span-5">
+          <div className="flex flex-col space-y-4 lg:col-span-5">
             {SERVICES.map((service) => {
               const isActive = service.id === activeId;
               return (
                 <button
                   key={service.id}
                   onClick={() => setActiveId(service.id)}
-                  className={`group relative flex items-center justify-between rounded-xl p-4 text-right transition-all duration-300 sm:p-5 ${
+                  className={`group relative flex items-center justify-between rounded-2xl p-5 text-right transition-all duration-300 sm:p-6 ${
                     isActive
-                      ? "bg-white/10 shadow-lg backdrop-blur-md"
-                      : "bg-white/[0.02] hover:bg-white/[0.05]"
+                      ? "bg-white/[0.03] shadow-[0_8px_30deg_rgb(0,0,0,0.12)] backdrop-blur-md ring-1 ring-white/10"
+                      : "hover:bg-white/[0.02]"
                   }`}
                 >
                   {/* Left Accent Bar on Active */}
-                  <div
-                    className={`absolute inset-y-0 right-0 w-1 rounded-r-xl bg-brand-yellow transition-all duration-300 ${
-                      isActive ? "opacity-100" : "opacity-0"
-                    }`}
-                  />
+                  <AnimatePresence>
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeAccent"
+                        className="absolute inset-y-0 right-0 w-1 rounded-r-2xl bg-brand-yellow"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                      />
+                    )}
+                  </AnimatePresence>
 
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-5">
                     <span
                       className={`text-sm font-bold font-mono transition-colors ${
-                        isActive ? "text-brand-yellow" : "text-white/40"
+                        isActive ? "text-brand-yellow" : "text-white/30"
                       }`}
                     >
                       {service.number}
                     </span>
                     <span
-                      className={`text-base font-semibold transition-colors sm:text-lg ${
-                        isActive ? "text-white" : "text-white/70 group-hover:text-white"
+                      className={`text-lg font-semibold transition-colors sm:text-xl ${
+                        isActive ? "text-white" : "text-white/60 group-hover:text-white"
                       }`}
                     >
                       {service.title}
@@ -118,13 +147,13 @@ export default function Services() {
 
                   {/* Icon */}
                   <div
-                    className={`flex h-10 w-10 items-center justify-center rounded-lg transition-colors ${
+                    className={`flex h-12 w-12 items-center justify-center rounded-xl transition-all ${
                       isActive
-                        ? "bg-brand-yellow text-brand-navy"
-                        : "bg-white/5 text-white/50 group-hover:text-white"
+                        ? "bg-brand-yellow text-brand-navy shadow-lg"
+                        : "bg-white/5 text-white/40 group-hover:bg-white/10 group-hover:text-white"
                     }`}
                   >
-                    <service.Icon className="h-5 w-5" />
+                    <service.Icon className="h-6 w-6" />
                   </div>
                 </button>
               );
@@ -133,57 +162,74 @@ export default function Services() {
 
           {/* Active Feature Display Card (7 Cols) */}
           <div className="lg:col-span-7">
-            <div className="relative flex h-full min-h-[380px] flex-col justify-between rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 to-white/[0.02] p-6 backdrop-blur-xl sm:p-10">
-              {/* Top Row: Big Number & Large Icon */}
-              <div>
-                <div className="flex items-center justify-between border-b border-white/10 pb-6">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-yellow/10 text-brand-yellow ring-1 ring-brand-yellow/30">
-                      <activeService.Icon className="h-7 w-7" />
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeId}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className="relative flex h-full min-h-[420px] flex-col justify-between rounded-3xl border border-white/5 bg-white/[0.01] p-8 backdrop-blur-sm sm:p-12 shadow-2xl"
+              >
+                {/* Internal Decorative Light */}
+                <div className="pointer-events-none absolute -top-10 -right-10 h-40 w-40 rounded-full bg-brand-yellow/5 blur-[60px]" />
+
+                {/* Top Row: Big Number & Large Icon */}
+                <div>
+                  <div className="flex items-center justify-between border-b border-white/5 pb-8">
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-yellow/10 text-brand-yellow ring-1 ring-brand-yellow/20">
+                        <activeService.Icon className="h-8 w-8" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-xs font-semibold tracking-wider text-brand-yellow uppercase">
+                          جزئیات خدمت
+                        </span>
+                        <span className="text-sm text-white/50">
+                          {activeService.id.toUpperCase()} SOLUTIONS
+                        </span>
+                      </div>
                     </div>
-                    <span className="text-xs font-semibold tracking-wider text-brand-yellow/80 uppercase">
-                      جزئیات خدمت
+                    <span className="font-mono text-5xl font-black text-white/[0.08] sm:text-7xl">
+                      {activeService.number}
                     </span>
                   </div>
-                  <span className="font-mono text-4xl font-black text-white/20 sm:text-6xl">
-                    {activeService.number}
+
+                  {/* Content Area */}
+                  <div className="mt-10">
+                    <h3 className="text-2xl font-bold text-white sm:text-3xl lg:text-4xl">
+                      {activeService.title}
+                    </h3>
+                    <p className="mt-8 text-justify text-base leading-relaxed text-white/70 sm:text-lg lg:text-xl lg:leading-loose">
+                      {activeService.description}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Bottom Action / Metadata Footer */}
+                <div className="mt-12 flex items-center justify-between border-t border-white/5 pt-8">
+                  <span className="text-sm text-white/40">
+                    طراحی‌شده برای کسب‌وکارهای پیشرو و نوآور
                   </span>
+                  <button className="inline-flex items-center gap-2.5 rounded-xl bg-brand-yellow px-6 py-3 text-sm font-bold text-brand-navy transition-all hover:bg-white hover:scale-105 active:scale-95 shadow-md">
+                    <span>درخواست مشاوره تخصصی</span>
+                    <svg
+                      className="h-5 w-5 rotate-180"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M14 5l7 7m0 0l-7 7m7-7H3"
+                      />
+                    </svg>
+                  </button>
                 </div>
-
-                {/* Content Area */}
-                <div className="mt-8">
-                  <h3 className="text-xl font-bold text-white sm:text-2xl lg:text-3xl">
-                    {activeService.title}
-                  </h3>
-                  <p className="mt-6 text-justify text-sm leading-relaxed text-white/80 sm:text-base lg:text-lg">
-                    {activeService.description}
-                  </p>
-                </div>
-              </div>
-
-              {/* Bottom Action / Metadata Footer */}
-              <div className="mt-10 flex items-center justify-between border-t border-white/10 pt-6">
-                <span className="text-xs text-white/50 sm:text-sm">
-                  طراحی‌شده برای کسب‌وکارهای پیشرو
-                </span>
-                <button className="inline-flex items-center gap-2 rounded-lg bg-brand-yellow px-4 py-2 text-xs font-bold text-brand-navy transition-all hover:bg-white sm:text-sm">
-                  <span>درخواست مشاوره</span>
-                  <svg
-                    className="h-4 w-4 rotate-180"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M14 5l7 7m0 0l-7 7m7-7H3"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
       </div>

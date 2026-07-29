@@ -9,6 +9,7 @@ const PARTNERS = [
   { src: "/assets/tehran.svg", title: "شهرداری تهران" },
   { src: "/assets/farhang.svg", title: "وزارت فرهنگ و ارشاد اسلامی" },
   { src: "/assets/miras.svg", title: "وزارت میراث و گردشگری" },
+  { src: "/assets/National Land and Housing Organization.png", title: "سازمان ملی زمین و مسکن" },
 ];
 
 export default function PartnersCarousel() {
