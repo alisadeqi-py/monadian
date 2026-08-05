@@ -10,6 +10,10 @@ const PARTNERS = [
   { src: "/assets/farhang.svg", title: "وزارت فرهنگ و ارشاد اسلامی" },
   { src: "/assets/miras.svg", title: "وزارت میراث و گردشگری" },
   { src: "/assets/National Land and Housing Organization.png", title: "سازمان ملی زمین و مسکن" },
+  { src: "/assets/majles.png", title: "مجلس شورای اسلامی" },
+  { src: "/assets/barekat.png", title: "بنیاد برکت" },
+  { src: "/assets/eslamshahr.png", title: "شهرداری اسلامشهر" },
+  { src: "/assets/rasa.jpg", title: "شرکت پیام رسا" },
 ];
 
 export default function PartnersCarousel() {
