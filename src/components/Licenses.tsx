@@ -43,7 +43,7 @@ export default function Licenses() {
         {/* Licenses Grid - Mobile First */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:gap-8">
           {CARDS.map((c, i) => (
-            <div key={i} className="flex w-full flex-col gap-4 text-center sm:items-start items-center">
+            <div key={i} className="flex w-full justify-between flex-col gap-4 text-center sm:items-start items-center">
               <div className="w-44 flex sm:mb-4 mb-6">
                 <Image
                   src={c.icon}
