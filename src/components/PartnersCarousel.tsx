@@ -4,16 +4,17 @@ import { useRef, useEffect, useState, useLayoutEffect } from "react";
 import Image from "next/image";
 
 const PARTNERS = [
-  { src: "/assets/khanevade.webp", title: "بنیاد ملی خانواده" },
-  { src: "/assets/rah.webp", title: "وزارت راه و شهرسازی" },
-  { src: "/assets/tehran.webp", title: "شهرداری تهران" },
-  { src: "/assets/وزارت-فرهنگ-و-ارشاد-اسلامی.webp", title: "وزارت فرهنگ و ارشاد اسلامی" },
-  { src: "/assets/miras.webp", title: "وزارت میراث و گردشگری" },
-  { src: "/assets/سازمان-ملی-زمین-و مسکن.webp", title: "سازمان ملی زمین و مسکن" },
-  { src: "/assets/majles.webp", title: "مجلس شورای اسلامی" },
-  { src: "/assets/barekat.webp", title: "بنیاد برکت" },
-  { src: "/assets/eslamshahr.webp", title: "شهرداری اسلامشهر" },
-  { src: "/assets/rasa.webp", title: "شرکت پیام رسا" },
+  { src: "/assets/khanevade.png", title: "بنیاد ملی خانواده" },
+  { src: "/assets/rah.png", title: "وزارت راه و شهرسازی" },
+  { src: "/assets/tehran.png", title: "شهرداری تهران" },
+  { src: "/assets/license-badge-2.png", title: "وزارت فرهنگ و ارشاد اسلامی" },
+  { src: "/assets/miras.png", title: "وزارت میراث و گردشگری" },
+  { src: "/assets/سازمان-ملی-زمین-و_مسکن.png", title: "سازمان ملی زمین و مسکن" },
+  { src: "/assets/majles.png", title: "مجلس شورای اسلامی" },
+  { src: "/assets/barekat.png", title: "بنیاد برکت" },
+  { src: "/assets/eslamshahr.png", title: "شهرداری اسلامشهر" },
+  { src: "/assets/rasa.png", title: "شرکت پیام رسا" },
+  { src: "/assets/alavi.png", title: "بنیاد علوی" },
 ];
 
 export default function PartnersCarousel() {
