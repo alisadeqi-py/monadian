@@ -207,7 +207,7 @@ export default function Footer() {
                 dir="ltr"
                 className="text-blue-400 transition-colors hover:text-brand-yellow hover:underline"
               >
-                info@Monadian.com
+                info@Monadianfath.com
               </a>
             </p>
             <p className="text-xs text-white/90 sm:text-sm">

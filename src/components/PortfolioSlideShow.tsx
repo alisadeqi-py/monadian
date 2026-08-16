@@ -49,7 +49,13 @@ export default function PortfolioSlideShow({ children }: { children: React.React
 
       <Link
         href="/"
-        aria-label="بازگشت"
+        aria-label={active === 0 ? "بازگشت" : "بازگشت به اسلاید نخست"}
+        onClick={(e) => {
+          if (active !== 0) {
+            e.preventDefault();
+            goToSlide(0);
+          }
+        }}
         className="fixed left-6 top-6 z-40 flex h-9 w-9 items-center justify-center rounded-full bg-black/40 text-gray-200 backdrop-blur transition hover:text-white"
       >
         <CloseIcon />
