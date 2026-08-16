@@ -13,7 +13,7 @@ const PARTNERS = [
   { src: "/assets/majles.png", title: "مجلس شورای اسلامی" },
   { src: "/assets/barekat.png", title: "بنیاد برکت" },
   { src: "/assets/eslamshahr.png", title: "شهرداری اسلامشهر" },
-  { src: "/assets/rasa.jpg", title: "شرکت پیام رسا" },
+  { src: "/assets/rasa.png", title: "شرکت پیام رسا" },
   { src: "/assets/alavi.png", title: "بنیاد علوی" },
 ];
 
