@@ -5,7 +5,10 @@ const CARDS = [
   {
     title: "مجوز موسسه فرهنگی هنری",
     ministry: "از وزارت فرهنگ و ارشاد اسلامی",
-    icon: "/assets/license-badge-1.png",
+    // Same ارشاد badge as the پایگاه خبری card below: license-badge-1.png was
+    // a byte-identical copy of it and got removed as a duplicate in 2805364,
+    // which left this pointing at a file that no longer exists.
+    icon: "/assets/license-badge-2.png",
   },
   {
     title: "تاییدیه شرکت خلاق",
