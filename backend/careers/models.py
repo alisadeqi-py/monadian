@@ -17,7 +17,33 @@ class CareerApplication(models.Model):
         ("سایر", "سایر"),
     ]
 
+    GENDER_CHOICES = [
+        ("مرد", "مرد"),
+        ("زن", "زن"),
+    ]
+
+    # Mirrors ROLE_OPTIONS in src/components/CareersForm.tsx. Kept here only so
+    # the admin's role filter can offer every role even before anyone applies
+    # for it — desired_roles itself stays free-form (no `choices`), because
+    # applications submitted before a role was renamed or retired must still
+    # keep the exact wording the applicant saw.
+    ROLE_CHOICES = [
+        "گرافیک دیزاینر(تدوین-گرافیک-موشن)",
+        "حسابدار",
+        "ادمین فضای مجازی",
+        "مدیر پیگیری،نظارت و اجرایی",
+        "نیروی خدماتی(آشپز و نظافت)",
+        "تصویربردار و عکاس",
+        "مسئول تحقیق توسعه",
+        "ویدیوگرافر و تصویربردار",
+    ]
+
     full_name = models.CharField("نام و نام خانوادگی", max_length=150)
+    # blank=True so the applications recorded before this field existed stay
+    # editable in the admin; the API serializer still requires it.
+    gender = models.CharField(
+        "جنسیت", max_length=10, choices=GENDER_CHOICES, blank=True
+    )
     age = models.PositiveSmallIntegerField("سن")
     phone_number = models.CharField("شماره تلفن", max_length=20)
     messengers = models.JSONField("پیام‌رسان‌های فعال", default=list, blank=True)

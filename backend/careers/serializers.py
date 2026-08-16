@@ -29,6 +29,13 @@ class CareerApplicationSerializer(serializers.ModelSerializer):
             "blank": "لطفاً نام و نام خانوادگی را وارد کنید.",
         },
     )
+    gender = serializers.ChoiceField(
+        choices=CareerApplication.GENDER_CHOICES,
+        error_messages={
+            "required": "جنسیت را انتخاب کنید.",
+            "invalid_choice": "جنسیت را انتخاب کنید.",
+        },
+    )
     age = serializers.IntegerField(
         min_value=10,
         max_value=90,
@@ -71,6 +78,7 @@ class CareerApplicationSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "full_name",
+            "gender",
             "age",
             "phone_number",
             "messengers",

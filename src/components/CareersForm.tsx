@@ -6,6 +6,7 @@ import { NETWORK_ERROR, parseApiError } from "@/lib/formError";
 
 const MESSENGERS = ["تلگرام", "اینستاگرام", "بله", "ایتا", "سروش", "واتساپ", "همه موارد"];
 const MARITAL_OPTIONS = ["مجرد", "متأهل", "سایر"];
+const GENDER_OPTIONS = ["مرد", "زن"];
 const ROLE_OPTIONS = [
   "گرافیک دیزاینر(تدوین-گرافیک-موشن)",
   "حسابدار",
@@ -35,6 +36,7 @@ type Status = "idle" | "loading" | "success" | "error";
 type Errors = Partial<
   Record<
     | "fullName"
+    | "gender"
     | "age"
     | "phone"
     | "messengers"
@@ -52,6 +54,7 @@ type Errors = Partial<
 // resume file extension) still lands under the right field.
 const BACKEND_FIELD_MAP: Record<string, keyof Errors> = {
   full_name: "fullName",
+  gender: "gender",
   age: "age",
   phone_number: "phone",
   messengers: "messengers",
@@ -79,6 +82,7 @@ function BackgroundLayer() {
 
 export default function CareersForm() {
   const [fullName, setFullName] = useState("");
+  const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
   const [phone, setPhone] = useState("");
   const [messengers, setMessengers] = useState<string[]>([]);
@@ -108,6 +112,7 @@ export default function CareersForm() {
     const ageNum = Number(normalizeDigits(age));
 
     if (!fullName.trim()) next.fullName = "لطفاً نام و نام خانوادگی را وارد کنید.";
+    if (!gender) next.gender = "جنسیت را انتخاب کنید.";
     if (!age.trim() || !Number.isInteger(ageNum) || ageNum < 10 || ageNum > 90) {
       next.age = "سن را به‌صورت عدد صحیح و معتبر وارد کنید.";
     }
@@ -133,6 +138,7 @@ export default function CareersForm() {
     try {
       const formData = new FormData();
       formData.append("full_name", fullName.trim());
+      formData.append("gender", gender);
       formData.append("age", String(Number(normalizeDigits(age))));
       formData.append("phone_number", normalizeDigits(phone).replace(/[\s-]/g, ""));
       formData.append("messengers", JSON.stringify(messengers));
@@ -198,7 +204,7 @@ export default function CareersForm() {
           className="rounded-[24px] border border-white/15 bg-white/[0.08] p-6 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.6)] backdrop-blur-[18px] sm:p-10 lg:p-6"
         >
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 lg:gap-x-8 lg:gap-y-3">
-            <div className="grid gap-5 sm:grid-cols-3 sm:gap-4 lg:col-span-2">
+            <div className="grid gap-5 sm:grid-cols-3 sm:gap-4 lg:col-span-2 lg:grid-cols-4">
               <Field className="sm:col-span-2" label="نام و نام خانوادگی" required error={errors.fullName}>
                 <input
                   type="text"
@@ -220,6 +226,27 @@ export default function CareersForm() {
                   dir="rtl"
                   className={inputClass(!!errors.age)}
                 />
+              </Field>
+
+              {/* Full width below lg, where a quarter-column is too narrow for
+                  the two chips to sit on one line next to the text inputs. */}
+              <Field
+                className="sm:col-span-3 lg:col-span-1"
+                label="جنسیت"
+                required
+                error={errors.gender}
+              >
+                <div className="flex flex-wrap gap-2.5">
+                  {GENDER_OPTIONS.map((g) => (
+                    <ToggleOption
+                      key={g}
+                      type="radio"
+                      label={g}
+                      checked={gender === g}
+                      onChange={() => setGender(g)}
+                    />
+                  ))}
+                </div>
               </Field>
             </div>
 
