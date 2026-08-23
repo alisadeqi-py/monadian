@@ -91,7 +91,7 @@ export default function Services() {
           <span className="text-xs font-bold uppercase tracking-widest text-brand-yellow sm:text-sm">
             حوزه‌های فعالیت
           </span>
-          <h2 className="mt-2 text-2xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+          <h2 className="mt-8 text-2xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
             خدمات راهبردی <br className="hidden sm:inline" />و توسعه برند
           </h2>
         </div>
